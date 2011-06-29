@@ -144,6 +144,9 @@ public:
     /// Returns whether the graph has the given graph attribute
     bool hasAttribute(const std::string& attribute) const;
 
+    /// Returns whether the graph is directed
+    bool isDirected() const;
+
     /// Checks whether the graph is a simple graph
     bool isSimple() const;
 

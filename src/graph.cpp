@@ -136,6 +136,10 @@ Vector Graph::getEdgelist(bool bycol) const {
     return result;
 }
 
+bool Graph::isDirected() const {
+    return igraph_is_directed(m_pGraph);
+}
+
 bool Graph::isSimple() const {
     bool_t result;
     IGRAPH_TRY(igraph_is_simple(m_pGraph, &result));
