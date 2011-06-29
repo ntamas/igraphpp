@@ -4,6 +4,7 @@
 #define IGRAPHPP_EDGE_H
 
 #include <utility>
+#include <igraph/cpp/any.hpp>
 #include <igraph/cpp/types.h>
 
 namespace igraph {
@@ -27,6 +28,15 @@ public:
 
     /// Returns the head (i.e. destination) of the edge
     integer_t head() { return destination(); }
+
+    /// Returns the value of the given edge attribute for this edge
+    any getAttribute(const std::string& attribute) const;
+
+    /**
+     * \brief Returns the value of the given edge attribute for this edge,
+     *        or a default value if there is no such attribute.
+     */
+    any getAttribute(const std::string& attribute, const any& defaultValue) const;
 
     /// Returns the source of the edge
     integer_t source();

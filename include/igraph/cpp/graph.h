@@ -21,6 +21,7 @@ namespace igraph {
 
 class Edge;
 class EdgeSelector;
+class Vertex;
 class VertexSelector;
 
 /// C++-style wrapper around an igraph_t object
@@ -160,6 +161,9 @@ public:
     /// Returns the number of vertices in the graph
     integer_t vcount() const { return igraph_vcount(m_pGraph); }
 
+    /// Returns the vertex with the given index in the graph
+    Vertex vertex(integer_t vid) const;
+
     /// Writes the edge list of the graph to the given file
     void writeEdgelist(FILE* outstream) const;
 
@@ -209,8 +213,10 @@ private:
     /// Returns a pointer to the attribute holder of the graph (const)
     const AttributeHolder* getAttributeHolder() const;
 
-    friend class VertexSelector;
+    friend class Edge;
     friend class EdgeSelector;
+    friend class Vertex;
+    friend class VertexSelector;
 };
 
 }       // end of namespaces

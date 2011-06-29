@@ -5,5 +5,6 @@ add_library(igraphpp STATIC attributes
                             vector
                             vector_bool
                             vector_long
+                            vertex
                             vertex_selector)
 

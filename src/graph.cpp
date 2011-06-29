@@ -8,6 +8,7 @@
 #include <igraph/cpp/edge.h>
 #include <igraph/cpp/edge_selector.h>
 #include <igraph/cpp/graph.h>
+#include <igraph/cpp/vertex.h>
 #include <igraph/cpp/vertex_selector.h>
 #include <memory>
 
@@ -164,6 +165,11 @@ void Graph::simplify(bool multiple, bool loops) {
     // TODO: last argument (attribute combination)
     assert(m_pGraph);
     IGRAPH_TRY(igraph_simplify(m_pGraph, multiple, loops, 0));
+}
+
+Vertex Graph::vertex(integer_t vid) const {
+    assert(m_pGraph);
+    return Vertex(this, vid);
 }
 
 void Graph::writeLEDA(FILE* outstream, const std::string& vertex_attr_name,

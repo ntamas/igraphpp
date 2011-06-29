@@ -45,6 +45,10 @@ public:
     /// Returns a copy of the value of the given edge attribute
     AttributeValueVector getEdgeAttribute(const std::string& attribute) const;
 
+    /// Returns the value of the given edge attribute for a given edge index
+    AttributeValue getEdgeAttribute(const std::string& attribute,
+        long int index) const;
+
     /// Returns a reference to the value of the given graph attribute
     AttributeValue& getGraphAttributeReference(const std::string& attribute) {
         return m_graphAttributes[attribute];

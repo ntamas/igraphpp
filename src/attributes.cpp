@@ -31,6 +31,14 @@ AttributeValueVector AttributeHolder::getEdgeAttribute(const std::string& attrib
     return it->second;
 }
 
+AttributeValue AttributeHolder::getEdgeAttribute(const std::string& attribute,
+        long int index) const {
+    EdgeAttributeMap::const_iterator it = m_edgeAttributes.find(attribute);
+    if (it == m_edgeAttributes.end())
+        return AttributeValue();
+    return it->second[index];
+}
+
 AttributeValue AttributeHolder::getGraphAttribute(const std::string& attribute) const {
     GraphAttributeMap::const_iterator it = m_graphAttributes.find(attribute);
     if (it == m_graphAttributes.end())
@@ -49,7 +57,7 @@ AttributeValue AttributeHolder::getVertexAttribute(const std::string& attribute,
         long int index) const {
     VertexAttributeMap::const_iterator it = m_vertexAttributes.find(attribute);
     if (it == m_vertexAttributes.end())
-        return AttributeValueVector();
+        return AttributeValue();
     return it->second[index];
 }
 
@@ -165,7 +173,7 @@ struct AttributeHandlerImpl {
     static int add_vertices(igraph_t *graph, long int nv, igraph_vector_ptr_t *attr) {
         AttributeHolder& holder = *(static_cast<AttributeHolder*>(graph->attr));
         AttributeHolder::VertexAttributeMap& attrs = holder.m_vertexAttributes;
-        return add_vertices_edges_helper(attrs, igraph_vcount(graph), nv, attr);
+        return add_vertices_edges_helper(attrs, igraph_vcount(graph)-nv, nv, attr);
     }
 
     /***********************************************************************/
@@ -174,8 +182,8 @@ struct AttributeHandlerImpl {
                   igraph_vector_ptr_t *attr) {
         AttributeHolder& holder = *(static_cast<AttributeHolder*>(graph->attr));
         AttributeHolder::EdgeAttributeMap& attrs = holder.m_edgeAttributes;
-        return add_vertices_edges_helper(attrs, igraph_ecount(graph),
-                igraph_vector_size(edges), attr);
+        long int ec = igraph_vector_size(edges) / 2;
+        return add_vertices_edges_helper(attrs, igraph_ecount(graph)-ec, ec, attr);
     }
 
     /***********************************************************************/
