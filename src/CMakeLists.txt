@@ -1,2 +1,9 @@
-add_library(igraphpp STATIC attributes edge graph vector vertex_selector)
+add_library(igraphpp STATIC attributes
+                            edge
+                            graph
+                            matching
+                            vector
+                            vector_bool
+                            vector_long
+                            vertex_selector)
 
