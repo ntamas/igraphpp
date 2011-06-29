@@ -5,6 +5,7 @@
 #include <igraph/igraph_games.h>
 #include <igraph/igraph_operators.h>
 #include <igraph/igraph_structural.h>
+#include <igraph/cpp/edge.h>
 #include <igraph/cpp/edge_selector.h>
 #include <igraph/cpp/graph.h>
 #include <igraph/cpp/vertex_selector.h>
@@ -47,6 +48,12 @@ Graph Graph::GRG(integer_t nodes, real_t radius, bool torus,
 Graph Graph::ReadEdgelist(FILE* instream, integer_t n, bool directed) {
     std::auto_ptr<igraph_t> result(new igraph_t);
     IGRAPH_TRY(igraph_read_graph_edgelist(result.get(), instream, n, directed));
+    return Graph(result.release());
+}
+
+Graph Graph::ReadGraphML(FILE* instream, int index) {
+    std::auto_ptr<igraph_t> result(new igraph_t);
+    IGRAPH_TRY(igraph_read_graph_graphml(result.get(), instream, index));
     return Graph(result.release());
 }
 
@@ -101,6 +108,16 @@ void Graph::degree(Vector* result, const VertexSelector& vids,
 void Graph::deleteEdges(const EdgeSelector& es) {
     assert(m_pGraph);
     IGRAPH_TRY(igraph_delete_edges(m_pGraph, *es.c_es()));
+}
+
+void Graph::edge(integer_t eid, integer_t* from, integer_t* to) const {
+    assert(m_pGraph);
+    IGRAPH_TRY(igraph_edge(m_pGraph, eid, from, to));
+}
+
+Edge Graph::edge(integer_t eid) const {
+    assert(m_pGraph);
+    return Edge(this, eid);
 }
 
 any Graph::getAttribute(const std::string& attribute) const {

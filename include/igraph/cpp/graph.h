@@ -19,8 +19,9 @@
 
 namespace igraph {
 
-class VertexSelector;
+class Edge;
 class EdgeSelector;
+class VertexSelector;
 
 /// C++-style wrapper around an igraph_t object
 class Graph {
@@ -76,6 +77,9 @@ public:
     static Graph ReadEdgelist(FILE* instream, integer_t n=0,
             bool directed=true);
 
+    /// Reads a graph from a GraphML file
+    static Graph ReadGraphML(FILE* instream, int index=0);
+
     /// Reads a graph from an NCOL file
     /**
      * \todo  handle the predefnames argument
@@ -119,6 +123,11 @@ public:
 
     /// Deletes some edges from the graph
     void deleteEdges(const EdgeSelector& es);
+
+    /// Returns the head and tail vertices of an edge
+    void edge(integer_t eid, integer_t* from, integer_t* to) const;
+    /// Returns the head and tail vertices of an edge
+    Edge edge(integer_t eid) const;
 
     /// Returns the number of edges in the graph
     integer_t ecount() const { return igraph_ecount(m_pGraph); }

@@ -24,17 +24,20 @@ public:
     /*****************************/
 
     /// Constructs an empty edge selector
-    EdgeSelector() {
+    explicit EdgeSelector(const Graph* pGraph = 0) {
+        setGraph(pGraph);
         IGRAPH_TRY(igraph_es_none(&m_es));
     }
 
     /// Constructs an edge selector that selects a single edge
-    EdgeSelector(integer_t eid) {
+    EdgeSelector(integer_t eid, const Graph* pGraph = 0) {
+        setGraph(pGraph);
         IGRAPH_TRY(igraph_es_1(&m_es, eid));
     }
 
     /// Constructs an edge selector that handles a vector as an edge selector
-    EdgeSelector(Vector* vector) {
+    EdgeSelector(Vector* vector, const Graph* pGraph = 0) {
+        setGraph(pGraph);
         IGRAPH_TRY(igraph_es_vector(&m_es, vector->c_vector()));
     }
 
@@ -44,7 +47,7 @@ public:
      * The caller should not destroy the edge selector on its own, ever;
      * the wrapper should be destroyed instead.
      */
-    EdgeSelector(igraph_es_t es) : m_es(es) {}
+    EdgeSelector(igraph_es_t es, const Graph* pGraph = 0) : m_es(es), m_pGraph(pGraph) {}
 
     /// Destroys the edge selector
     ~EdgeSelector() {
@@ -56,17 +59,17 @@ public:
     /******************/
 
     /// Creates an edge selector that selects all edges
-    static EdgeSelector All(EdgeOrderType order = IGRAPH_EDGEORDER_ID) {
+    static EdgeSelector All(EdgeOrderType order = IGRAPH_EDGEORDER_ID, const Graph* pGraph = 0) {
         igraph_es_t es;
         IGRAPH_TRY(igraph_es_all(&es, order));
-        return EdgeSelector(es);
+        return EdgeSelector(es, pGraph);
     }
 
     /// Creates an edge selector from multiple edges defined by their endpoints
-    static EdgeSelector Pairs(const Vector& vector, bool directed=true) {
+    static EdgeSelector Pairs(const Vector& vector, bool directed=true, const Graph* pGraph = 0) {
         igraph_es_t es;
         IGRAPH_TRY(igraph_es_pairs(&es, vector.c_vector(), directed));
-        return EdgeSelector(es);
+        return EdgeSelector(es, pGraph);
     }
 
     /********************/
@@ -83,9 +86,19 @@ public:
         return &m_es;
     }
 
+    /// Returns the graph the edge selector refers to
+    const Graph* getGraph() const {
+        return m_pGraph;
+    }
+
     /// Checks whether an edge selector includes all edges
-    bool is_all() {
+    bool isAll() {
         return igraph_es_is_all(&m_es);
+    }
+
+    /// Sets the graph the vertex selector refers to
+    void setGraph(const Graph* pGraph) {
+        m_pGraph = pGraph;
     }
 
     /*************/
@@ -100,6 +113,14 @@ private:
     /// Assignment operator (intentionally unimplemented)
     EdgeSelector& operator=(const EdgeSelector&);
 };
+
+inline EdgeSelector E(const Graph* graph, EdgeOrderType order = IGRAPH_EDGEORDER_ID) {
+    return EdgeSelector::All(order, graph);
+}
+
+inline EdgeSelector E(const Graph& graph, EdgeOrderType order = IGRAPH_EDGEORDER_ID) {
+    return EdgeSelector::All(order, &graph);
+}
 
 }       // end of namespaces
 
