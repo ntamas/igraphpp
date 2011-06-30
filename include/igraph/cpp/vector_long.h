@@ -58,6 +58,16 @@ public:
         IGRAPH_TRY(igraph_vector_long_copy(&m_vector, &other.m_vector));
     }
 
+    /// Constructor from STL container
+    template <typename InputIterator>
+    VectorLong(InputIterator first, InputIterator last) {
+        IGRAPH_TRY(igraph_vector_long_init(&m_vector, 0));
+        while (first != last) {
+            this->push_back(*first);
+            ++first;
+        }
+    }
+
     /// Destroys the vector
     ~VectorLong() {
         if (m_owner)
