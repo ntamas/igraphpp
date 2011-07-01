@@ -9,5 +9,10 @@ add_library(igraphpp STATIC attributes
                             vertex_selector
 
                             generators/line_graph
+
+                            io/edgelist
+                            io/graphml
+                            io/leda
+                            io/ncol
 )
 

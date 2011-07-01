@@ -46,25 +46,6 @@ Graph Graph::GRG(integer_t nodes, real_t radius, bool torus,
     return Graph(result.release());
 }
 
-Graph Graph::ReadEdgelist(FILE* instream, integer_t n, bool directed) {
-    std::auto_ptr<igraph_t> result(new igraph_t);
-    IGRAPH_TRY(igraph_read_graph_edgelist(result.get(), instream, n, directed));
-    return Graph(result.release());
-}
-
-Graph Graph::ReadGraphML(FILE* instream, int index) {
-    std::auto_ptr<igraph_t> result(new igraph_t);
-    IGRAPH_TRY(igraph_read_graph_graphml(result.get(), instream, index));
-    return Graph(result.release());
-}
-
-Graph Graph::ReadNCOL(FILE* instream, bool names,
-        AddWeights weights, bool directed) {
-    std::auto_ptr<igraph_t> result(new igraph_t);
-    IGRAPH_TRY(igraph_read_graph_ncol(result.get(), instream, 0, names, weights, directed));
-    return Graph(result.release());
-}
-
 Graph Graph::Ring(integer_t n, bool directed, bool mutual, bool circular) {
     std::auto_ptr<igraph_t> result(new igraph_t);
     IGRAPH_TRY(igraph_ring(result.get(), n, directed, mutual, circular));
@@ -174,22 +155,6 @@ void Graph::simplify(bool multiple, bool loops) {
 Vertex Graph::vertex(integer_t vid) const {
     assert(m_pGraph);
     return Vertex(this, vid);
-}
-
-void Graph::writeLEDA(FILE* outstream, const std::string& vertex_attr_name,
-        const std::string& edge_attr_name) const {
-    const char *vattr, *eattr;
-
-    assert(m_pGraph);
-    vattr = vertex_attr_name.length() ? vertex_attr_name.c_str() : 0;
-    eattr = edge_attr_name.length() ? edge_attr_name.c_str() : 0;
-
-    IGRAPH_TRY(igraph_write_graph_leda(m_pGraph, outstream, vattr, eattr));
-}
-
-void Graph::writeEdgelist(FILE* outstream) const {
-    assert(m_pGraph);
-    IGRAPH_TRY(igraph_write_graph_edgelist(m_pGraph, outstream));
 }
 
 /*************/
