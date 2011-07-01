@@ -152,13 +152,6 @@ public:
     /// Returns the vertex with the given index in the graph
     Vertex vertex(integer_t vid) const;
 
-    /// Writes the edge list of the graph to the given file
-    void writeEdgelist(FILE* outstream) const;
-
-    /// Writes the graph in LEDA format to the given file
-    void writeLEDA(FILE* outstream, const std::string& vertex_attr_name = "",
-            const std::string& edge_attr_name = "") const;
-
     /*************/
     /* Operators */
     /*************/
