@@ -162,6 +162,11 @@ public:
         return VECTOR(m_vector)[0];
     }
 
+    /// Inserts an element into the vector at a given index
+    void insert(long int index, value_type e) {
+        IGRAPH_TRY(igraph_vector_bool_insert(&m_vector, index, e));
+    }
+
     /// Pops an element from the end of the vector
     value_type pop_back() {
         return igraph_vector_bool_pop_back(&m_vector);

@@ -182,6 +182,11 @@ public:
         return VECTOR(m_vector)[0];
     }
 
+    /// Inserts an element into the vector at a given index
+    void insert(long int index, value_type e) {
+        IGRAPH_TRY(igraph_vector_insert(&m_vector, index, e));
+    }
+
     /// Returns the minimum element of the vector
     value_type min() const {
         return igraph_vector_min(&m_vector);
