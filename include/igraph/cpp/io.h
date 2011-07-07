@@ -6,6 +6,7 @@
 #include <igraph/cpp/io/edgelist.h>
 #include <igraph/cpp/io/graphml.h>
 #include <igraph/cpp/io/leda.h>
+#include <igraph/cpp/io/lgl.h>
 #include <igraph/cpp/io/ncol.h>
 
 #endif    // IGRAPHPP_IO_H

@@ -13,6 +13,7 @@ add_library(igraphpp STATIC attributes
                             io/edgelist
                             io/graphml
                             io/leda
+							io/lgl
                             io/ncol
 )
 
