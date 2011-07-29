@@ -202,6 +202,16 @@ public:
         IGRAPH_TRY(igraph_vector_bool_resize(&m_vector, newsize));
     }
 
+    /// Reverses the vector in-place
+    void reverse() {
+        IGRAPH_TRY(igraph_vector_bool_reverse(&m_vector));
+    }
+
+    /// Shuffles the vector in-place
+    void shuffle() {
+        IGRAPH_TRY(igraph_vector_bool_shuffle(&m_vector));
+    }
+
     /// Returns the size of the vector
     size_type size() const {
         return igraph_vector_bool_size(&m_vector);

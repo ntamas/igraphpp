@@ -237,9 +237,19 @@ public:
         IGRAPH_TRY(igraph_vector_resize(&m_vector, newsize));
     }
 
+    /// Reverses the vector in-place
+    void reverse() {
+        IGRAPH_TRY(igraph_vector_reverse(&m_vector));
+    }
+
     /// Searches the vector for a given element from the given position
     bool search(long int from, value_type what, long int* pos = 0) {
         return igraph_vector_search(&m_vector, from, what, pos);
+    }
+
+    /// Shuffles the vector in-place
+    void shuffle() {
+        IGRAPH_TRY(igraph_vector_shuffle(&m_vector));
     }
 
     /// Returns the size of the vector
