@@ -12,6 +12,10 @@ Graph read_lgl(FILE* instream, bool names=true,
         AddWeights weights = IGRAPH_ADD_WEIGHTS_IF_PRESENT,
         bool directed=true);
 
+/// Writes a graph to an LGL file
+void write_lgl(FILE* outstream, const Graph& graph, const std::string& names="name",
+        const std::string& weights="weight", bool isolates=true);
+
 }         // end of namespace
 
 #endif    // IGRAPHPP_IO_LGL_H

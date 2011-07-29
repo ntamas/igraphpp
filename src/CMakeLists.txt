@@ -8,6 +8,8 @@ add_library(igraphpp STATIC attributes
                             vertex
                             vertex_selector
 
+							analysis/components
+
 							generators/degree_sequence
 							generators/erdos_renyi
                             generators/line_graph

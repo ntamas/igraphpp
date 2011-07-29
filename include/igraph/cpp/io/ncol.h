@@ -15,6 +15,10 @@ Graph read_ncol(FILE* instream, bool names=true,
         AddWeights weights = IGRAPH_ADD_WEIGHTS_IF_PRESENT,
         bool directed=true);
 
+/// Writes a graph to an NCOL file
+void write_ncol(FILE* outstream, const Graph& graph, const std::string& names="name",
+        const std::string& weights="weight");
+
 }         // end of namespace
 
 #endif    // IGRAPHPP_IO_NCOL_H
