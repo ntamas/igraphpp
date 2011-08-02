@@ -52,6 +52,17 @@ public:
         assert(graph);
     }
 
+    /// Constructs a wrapper that wraps the given igraph_t instance
+    /**
+     * The ownership of the wrapped instance is stolen by the wrapper.
+     * The caller should not destroy the graph on its own, ever;
+     * the wrapper should be destroyed instead.
+     *
+     * This function never throws an exception.
+     */
+    Graph(std::auto_ptr<igraph_t> graph) throw() : m_pGraph(graph.release()) {
+    }
+
     /// Copy constructor
     Graph(const Graph& other) : m_pGraph(new igraph_t) {
         IGRAPH_TRY(igraph_copy(m_pGraph, other.m_pGraph));

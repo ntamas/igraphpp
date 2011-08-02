@@ -3,16 +3,18 @@
 #ifndef IGRAPHPP_GENERATORS_DEGREE_SEQUENCE_H
 #define IGRAPHPP_GENERATORS_DEGREE_SEQUENCE_H
 
+#include <memory>
+
 namespace igraph {
 
 class Graph;
 
 /// Generates an undirected random graph with a given degree sequence
-Graph degree_sequence_game(const Vector& degrees,
+std::auto_ptr<Graph> degree_sequence_game(const Vector& degrees,
         DegreeSequenceMethod method = IGRAPH_DEGSEQ_SIMPLE);
 
 /// Generates a directed random graph with a given degree sequence
-Graph degree_sequence_game(const Vector& outdegrees, const Vector& indegrees,
+std::auto_ptr<Graph> degree_sequence_game(const Vector& outdegrees, const Vector& indegrees,
         DegreeSequenceMethod method = IGRAPH_DEGSEQ_SIMPLE);
 
 }         // end of namespace

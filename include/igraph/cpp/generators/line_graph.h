@@ -8,7 +8,7 @@ namespace igraph {
 class Graph;
 
 /// Returns the line graph of the given graph
-Graph line_graph(const Graph& graph);
+std::auto_ptr<Graph> line_graph(const Graph& graph);
 
 }         // end of namespace
 
