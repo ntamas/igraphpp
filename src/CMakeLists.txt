@@ -9,6 +9,7 @@ add_library(igraphpp STATIC attributes
                             vertex_selector
 
 							analysis/components
+							analysis/non_simple
 
 							generators/degree_sequence
 							generators/erdos_renyi

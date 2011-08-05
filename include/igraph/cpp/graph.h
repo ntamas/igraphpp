@@ -105,6 +105,9 @@ public:
     /// Adds the given number of vertices to the graph
     void addVertices(long numVertices);
 
+    /// Returns whether the two vertices are connected
+    bool areConnected(long u, long v) const;
+
     /// Extracts a pointer to the encapsulated graph object
     igraph_t* c_graph() { return m_pGraph; }
 
@@ -136,6 +139,10 @@ public:
     Vector getEdgelist(bool bycol=false) const;
     /// Returns the edge list of the graph
     void getEdgelist(Vector* result, bool bycol=false) const;
+
+    /// Returns the ID of an arbitrary edge between the two given nodes
+    integer_t get_eid(integer_t source, integer_t target, bool directed=true,
+            bool error=false) const;
 
     /// Returns whether the graph has the given graph attribute
     bool hasAttribute(const std::string& attribute) const;

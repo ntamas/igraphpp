@@ -69,9 +69,18 @@ void Graph::addEdges(const Vector& edges) {
 
 void Graph::addVertex() { addVertices(1); }
 
-void Graph::addVertices(long numVertices) {
+void Graph::addVertices(long int numVertices) {
     assert(m_pGraph);
     IGRAPH_TRY(igraph_add_vertices(m_pGraph, numVertices, 0));
+}
+
+bool Graph::areConnected(long int u, long int v) const {
+    igraph_bool_t result;
+
+    assert(m_pGraph);
+    IGRAPH_TRY(igraph_are_connected(m_pGraph, u, v, &result));
+
+    return result;
 }
 
 Vector Graph::degree(const VertexSelector& vids, NeighborMode mode, bool loops) const {
@@ -115,6 +124,13 @@ Vector Graph::getEdgelist(bool bycol) const {
     Vector result;
     getEdgelist(&result, bycol);
     return result;
+}
+
+integer_t Graph::get_eid(integer_t source, integer_t target,
+        bool directed, bool error) const {
+    integer_t eid;
+    IGRAPH_TRY(igraph_get_eid(m_pGraph, &eid, source, target, directed, error));
+    return eid;
 }
 
 bool Graph::isDirected() const {

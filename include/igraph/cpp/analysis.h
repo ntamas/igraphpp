@@ -4,6 +4,7 @@
 #define IGRAPHPP_ANALYSIS_H
 
 #include <igraph/cpp/analysis/components.h>
+#include <igraph/cpp/analysis/non_simple.h>
 
 #endif    // IGRAPHPP_ANALYSIS_H
 

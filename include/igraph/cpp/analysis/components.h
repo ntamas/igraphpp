@@ -17,5 +17,5 @@ void clusters(const Graph& graph, Vector* membership,
 
 }         // end of namespace
 
-#endif    // IGRAPHPP_GENERATORS_DETERMINISTIC_H
+#endif    // IGRAPHPP_ANALYSIS_COMPONENTS_H
 
