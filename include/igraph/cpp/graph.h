@@ -147,6 +147,11 @@ public:
     /// Returns whether the graph has the given graph attribute
     bool hasAttribute(const std::string& attribute) const;
 
+    /// Returns the edges incident on a given vertex
+    void incident(Vector* result, long int vertex, NeighborMode mode = IGRAPH_OUT) const;
+    /// Returns the edges incident on a given vertex
+    Vector incident(long int vertex, NeighborMode mode = IGRAPH_OUT) const;
+
     /// Returns whether the graph is directed
     bool isDirected() const;
 

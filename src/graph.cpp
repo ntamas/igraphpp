@@ -147,6 +147,17 @@ bool Graph::hasAttribute(const std::string& attribute) const {
     return getAttributeHolder()->hasGraphAttribute(attribute);
 }
 
+void Graph::incident(Vector* result, long int vertex, NeighborMode mode) const {
+    assert(m_pGraph);
+    IGRAPH_TRY(igraph_incident(m_pGraph, result->c_vector(), vertex, mode));
+}
+
+Vector Graph::incident(long int vertex, NeighborMode mode) const {
+    Vector result;
+    incident(&result, vertex, mode);
+    return result;
+}
+
 void Graph::neighbors(Vector* result, long int vertex, NeighborMode mode) const {
     assert(m_pGraph);
     IGRAPH_TRY(igraph_neighbors(m_pGraph, result->c_vector(), vertex, mode));
