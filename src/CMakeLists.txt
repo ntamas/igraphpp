@@ -16,6 +16,7 @@ add_library(igraphpp STATIC attributes
                             generators/line_graph
 
                             io/edgelist
+                            io/gml
                             io/graphml
                             io/leda
 							io/lgl
