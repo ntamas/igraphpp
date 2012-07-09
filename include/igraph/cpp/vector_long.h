@@ -24,7 +24,18 @@ public:
 
 private:
     /// The igraph_vector_long_t instance encapsulated by the wrapper
+    /**
+     * When the wrapper owns its contents, m_pVector points to this vector, otherwise
+     * m_pVector points elsewhere and this vector is not used.
+     */
     igraph_vector_long_t m_vector;
+
+    /// Pointer to the igraph_vector_long_t instance encapsulated by the wrapper.
+    /**
+     * When the wrapper owns its contents, this pointer points to m_vector,
+     * otherwise it points to somewhere else.
+     */
+    igraph_vector_long_t *m_pVector;
 
     /// Whether we own the given igraph_vector_long_t instance or not
     bool m_owner;
@@ -35,33 +46,31 @@ public:
     /*****************************/
 
     /// Constructs a vector
-    explicit VectorLong(size_type length = 0, pointer data = 0) : m_owner(true) {
+    explicit VectorLong(size_type length = 0, pointer data = 0)
+        : m_pVector(&m_vector), m_owner(true) {
         if (data) {
-            IGRAPH_TRY(igraph_vector_long_init_copy(&m_vector, data, length));
+            IGRAPH_TRY(igraph_vector_long_init_copy(m_pVector, data, length));
         } else
-            IGRAPH_TRY(igraph_vector_long_init(&m_vector, length));
+            IGRAPH_TRY(igraph_vector_long_init(m_pVector, length));
     }
 
-    /// Constructs a wrapper that wraps the given igraph_vector_long_t instance
-    /**
-     * \param  own  specifies whether we own the given \c igraph_vector_long_t instance
-     *              or not. If own is false, the encapsulated \c igraph_vector_long_t
-     *              will not be destroyed when the \c VectorLong wrapper is destroyed.
-     */
-    VectorLong(igraph_vector_long_t vector, bool own=true) : m_vector(vector), m_owner(own) {}
+    /// Constructs a wrapper that takes ownership of the given vector
+    VectorLong(igraph_vector_long_t vector) : m_vector(vector), m_pVector(&m_vector), m_owner(true) {}
 
     /// Constructs a wrapper that refers to the same vector as the given igraph_vector_long_t* pointer
-    VectorLong(igraph_vector_long_t* vector, bool own=false) : m_vector(*vector), m_owner(own) {}
+    VectorLong(igraph_vector_long_t* vector, bool own=false) : m_vector(*vector), m_owner(own) {
+        m_pVector = own ? &m_vector : vector;
+    }
 
     /// Copy constructor
-    VectorLong(const VectorLong& other) : m_owner(true) {
-        IGRAPH_TRY(igraph_vector_long_copy(&m_vector, &other.m_vector));
+    VectorLong(const VectorLong& other) : m_pVector(&m_vector), m_owner(true) {
+        IGRAPH_TRY(igraph_vector_long_copy(m_pVector, other.m_pVector));
     }
 
     /// Constructor from STL container
     template <typename InputIterator>
     VectorLong(InputIterator first, InputIterator last) {
-        IGRAPH_TRY(igraph_vector_long_init(&m_vector, 0));
+        IGRAPH_TRY(igraph_vector_long_init(m_pVector, 0));
         while (first != last) {
             this->push_back(*first);
             ++first;
@@ -71,7 +80,7 @@ public:
     /// Destroys the vector
     ~VectorLong() {
         if (m_owner)
-            igraph_vector_long_destroy(&m_vector);
+            igraph_vector_long_destroy(m_pVector);
     }
 
     /******************/
@@ -91,27 +100,27 @@ public:
 
     /// Appends another vector to this one
     void append(const VectorLong& from) {
-        IGRAPH_TRY(igraph_vector_long_append(&m_vector, &from.m_vector));
+        IGRAPH_TRY(igraph_vector_long_append(m_pVector, from.m_pVector));
     }
 
     /// Returns an iterator pointing to the first element of the vector
     iterator begin() {
-        return &(VECTOR(m_vector)[0]);
+        return &(VECTOR(*m_pVector)[0]);
     }
 
     /// Returns an iterator pointing to the first element of the vector (const)
     const_iterator begin() const {
-        return &(VECTOR(m_vector)[0]);
+        return &(VECTOR(*m_pVector)[0]);
     }
 
     /// Returns the last element of the vector
     reference back() {
-        return VECTOR(m_vector)[size()-1];
+        return VECTOR(*m_pVector)[size()-1];
     }
 
     /// Returns the last element of the vector (const variant)
     const_reference back() const {
-        return VECTOR(m_vector)[size()-1];
+        return VECTOR(*m_pVector)[size()-1];
     }
 
     /// Finds an element using binary search in a sorted vector
@@ -122,7 +131,7 @@ public:
      * if the element was not found to keep the vector sorted.
      */
     bool binsearch(value_type what, long int *pos = 0) {
-        return igraph_vector_long_binsearch(&m_vector, what, pos);
+        return igraph_vector_long_binsearch(m_pVector, what, pos);
     }
 
     /// Removes all the elements from the vector
@@ -132,142 +141,142 @@ public:
      * the vector has to grow again.
      */
     void clear() {
-        igraph_vector_long_clear(&m_vector);
+        igraph_vector_long_clear(m_pVector);
     }
 
     /// Returns whether a given element is in the vector, using linear search
     bool contains(value_type e) {
-        return igraph_vector_long_contains(&m_vector, e);
+        return igraph_vector_long_contains(m_pVector, e);
     }
 
     /// Returns a pointer to the internal igraph_vector_long_t
     igraph_vector_long_t* c_vector() {
-        return &m_vector;
+        return m_pVector;
     }
 
     /// Returns a const pointer to the internal igraph_vector_long_t
     const igraph_vector_long_t* c_vector() const {
-        return &m_vector;
+        return m_pVector;
     }
 
     /// Returns whether the vector is empty
     bool empty() const {
-        return igraph_vector_long_empty(&m_vector);
+        return igraph_vector_long_empty(m_pVector);
     }
 
     /// Returns an iterator pointing after the last element of the vector
     iterator end() {
-        return &(VECTOR(m_vector)[size()]);
+        return &(VECTOR(*m_pVector)[size()]);
     }
 
     /// Returns an iterator pointing after the last element of the vector (const)
     const_iterator end() const {
-        return &(VECTOR(m_vector)[size()]);
+        return &(VECTOR(*m_pVector)[size()]);
     }
 
     /// Fills the vector with the given item
     void fill(value_type element) {
-        igraph_vector_long_fill(&m_vector, element);
+        igraph_vector_long_fill(m_pVector, element);
     }
 
     /// Returns the first element of the vector
     reference front() {
-        return VECTOR(m_vector)[0];
+        return VECTOR(*m_pVector)[0];
     }
 
     /// Returns the first element of the vector (const variant)
     const_reference front() const {
-        return VECTOR(m_vector)[0];
+        return VECTOR(*m_pVector)[0];
     }
 
     /// Inserts an element into the vector at a given index
     void insert(long int index, value_type e) {
-        IGRAPH_TRY(igraph_vector_long_insert(&m_vector, index, e));
+        IGRAPH_TRY(igraph_vector_long_insert(m_pVector, index, e));
     }
 
     /// Returns the minimum element of the vector
     value_type min() const {
-        return igraph_vector_long_min(&m_vector);
+        return igraph_vector_long_min(m_pVector);
     }
 
     /// Returns the maximum element of the vector
     value_type max() const {
-        return igraph_vector_long_max(&m_vector);
+        return igraph_vector_long_max(m_pVector);
     }
 
     /// Returns the maximum absolute difference between two vectors
     value_type maxdifference(const VectorLong& other) const {
-        return igraph_vector_long_maxdifference(&m_vector, &other.m_vector);
+        return igraph_vector_long_maxdifference(m_pVector, other.m_pVector);
     }
 
     /// Pops an element from the end of the vector
     value_type pop_back() {
-        return igraph_vector_long_pop_back(&m_vector);
+        return igraph_vector_long_pop_back(m_pVector);
     }
 
     /// Prints the vector to the standard output
     void print() const {
-        igraph_vector_long_print(&m_vector);
+        igraph_vector_long_print(m_pVector);
     }
 
     /// Adds a new element to the end of the vector
     void push_back(value_type e) {
-        IGRAPH_TRY(igraph_vector_long_push_back(&m_vector, e));
+        IGRAPH_TRY(igraph_vector_long_push_back(m_pVector, e));
     }
 
     /// Removes an element at the given index from the vector
     void remove(long int index) {
-        igraph_vector_long_remove(&m_vector, index);
+        igraph_vector_long_remove(m_pVector, index);
     }
 
     /// Removes a section of the vector
     void remove_section(long int from, long int to) {
-        igraph_vector_long_remove_section(&m_vector, from, to);
+        igraph_vector_long_remove_section(m_pVector, from, to);
     }
 
     /// Reserves space for the given number of elements in the vector
     void reserve(size_type newsize) {
-        IGRAPH_TRY(igraph_vector_long_reserve(&m_vector, newsize));
+        IGRAPH_TRY(igraph_vector_long_reserve(m_pVector, newsize));
     }
 
     /// Resizes the vector
     void resize(size_type newsize) {
-        IGRAPH_TRY(igraph_vector_long_resize(&m_vector, newsize));
+        IGRAPH_TRY(igraph_vector_long_resize(m_pVector, newsize));
     }
 
     /// Reverses the vector in-place
     void reverse() {
-        IGRAPH_TRY(igraph_vector_long_reverse(&m_vector));
+        IGRAPH_TRY(igraph_vector_long_reverse(m_pVector));
     }
 
     /// Searches the vector for a given element from the given position
     bool search(long int from, value_type what, long int* pos = 0) {
-        return igraph_vector_long_search(&m_vector, from, what, pos);
+        return igraph_vector_long_search(m_pVector, from, what, pos);
     }
 
     /// Shuffles the vector in-place
     void shuffle() {
-        IGRAPH_TRY(igraph_vector_long_shuffle(&m_vector));
+        IGRAPH_TRY(igraph_vector_long_shuffle(m_pVector));
     }
 
     /// Returns the size of the vector
     size_type size() const {
-        return igraph_vector_long_size(&m_vector);
+        return igraph_vector_long_size(m_pVector);
     }
 
     /// Sorts the elements of the vector into ascending order
     void sort() {
-        igraph_vector_long_sort(&m_vector);
+        igraph_vector_long_sort(m_pVector);
     }
 
     /// Returns the sum of the elements of the vector
     value_type sum() const {
-        return igraph_vector_long_sum(&m_vector);
+        return igraph_vector_long_sum(m_pVector);
     }
 
     /// Swaps the elements of this vector with another one if they are of equal length
     void swap(VectorLong& v2) {
-        IGRAPH_TRY(igraph_vector_long_swap(&m_vector, &v2.m_vector));
+        IGRAPH_TRY(igraph_vector_long_swap(m_pVector, v2.m_pVector));
     }
 
     /*************/
@@ -276,7 +285,7 @@ public:
 
     /// Assignment operator: copies the given vector to this one
     VectorLong& operator=(const VectorLong& other) {
-        IGRAPH_TRY(igraph_vector_long_update(&m_vector, &other.m_vector));
+        IGRAPH_TRY(igraph_vector_long_update(m_pVector, other.m_pVector));
         return *this;
     }
 
@@ -285,13 +294,13 @@ public:
      * It is assumed that the array has the required size.
      */
     VectorLong& operator=(const pointer other) {
-        memcpy(m_vector.stor_begin, other, size());
+        memcpy(m_pVector->stor_begin, other, size());
         return *this;
     }
 
     /// Equality check: returns true if the two vectors are equal
     bool operator==(const VectorLong& other) const {
-        return igraph_vector_long_is_equal(&m_vector, &other.m_vector);
+        return igraph_vector_long_is_equal(m_pVector, other.m_pVector);
     }
 
     /// Nonequality check: returns true if the two vectors are not equal
@@ -301,23 +310,23 @@ public:
 
     /// Returns the element with the given index
     reference operator[](long int index) {
-        return VECTOR(m_vector)[index];
+        return VECTOR(*m_pVector)[index];
     }
 
     /// Returns the element with the given index (const variant)
     value_type operator[](long int index) const {
-        return VECTOR(m_vector)[index];
+        return VECTOR(*m_pVector)[index];
     }
 
     /// In-place addition of a constant
     VectorLong& operator+=(value_type plus) {
-        igraph_vector_long_add_constant(&m_vector, plus);
+        igraph_vector_long_add_constant(m_pVector, plus);
         return *this;
     }
 
     /// In-place addition of a vector
     VectorLong& operator+=(const VectorLong& v2) {
-        IGRAPH_TRY(igraph_vector_long_add(&m_vector, &v2.m_vector));
+        IGRAPH_TRY(igraph_vector_long_add(m_pVector, v2.m_pVector));
         return *this;
     }
 
@@ -330,13 +339,13 @@ public:
 
     /// In-place subtraction of a constant
     VectorLong& operator-=(value_type minus) {
-        igraph_vector_long_add_constant(&m_vector, -minus);
+        igraph_vector_long_add_constant(m_pVector, -minus);
         return *this;
     }
 
     /// In-place subtraction of a vector
     VectorLong& operator-=(const VectorLong& v2) {
-        IGRAPH_TRY(igraph_vector_long_sub(&m_vector, &v2.m_vector));
+        IGRAPH_TRY(igraph_vector_long_sub(m_pVector, v2.m_pVector));
         return *this;
     }
 
@@ -354,13 +363,13 @@ public:
 
     /// In-place multiplication by a constant
     VectorLong& operator*=(const real_t by) {
-        igraph_vector_long_scale(&m_vector, by);
+        igraph_vector_long_scale(m_pVector, by);
         return *this;
     }
 
     /// In-place division by a constant
     VectorLong& operator/=(real_t by) {
-        igraph_vector_long_scale(&m_vector, 1.0 / by);
+        igraph_vector_long_scale(m_pVector, 1.0 / by);
         return *this;
     }
 

@@ -6,6 +6,8 @@
 #include <map>
 #include <vector>
 #include <igraph/cpp/any.hpp>
+#include <igraph/cpp/str_vector.h>
+#include <igraph/cpp/types.h>
 
 namespace igraph {
 
@@ -15,7 +17,7 @@ typedef any AttributeValue;
 /// Typedef for a vector that stores attributes
 typedef std::vector<AttributeValue> AttributeValueVector;
 
-struct AttributeHandlerImpl;
+class AttributeHandlerImpl;
 
 /// Attribute holder class for graphs
 class AttributeHolder {
@@ -40,7 +42,14 @@ private:
 
 public:
     /// Returns a reference to the value of the given edge attribute
-    AttributeValueVector& getEdgeAttributeReference(const std::string& attribute);
+    AttributeValueVector& getEdgeAttributeReference(const std::string& attribute,
+            integer_t ecount) {
+        AttributeValueVector& result = m_edgeAttributes[attribute];
+        if (result.size() < static_cast<size_t>(ecount)) {
+            result.resize(ecount);
+        }
+        return result;
+    }
 
     /// Returns a copy of the value of the given edge attribute
     AttributeValueVector getEdgeAttribute(const std::string& attribute) const;
@@ -48,6 +57,9 @@ public:
     /// Returns the value of the given edge attribute for a given edge index
     AttributeValue getEdgeAttribute(const std::string& attribute,
         long int index) const;
+
+    /// Stores the list of edge attributes in an StrVector
+    void getEdgeAttributeList(StrVector& container) const;
 
     /// Returns a reference to the value of the given graph attribute
     AttributeValue& getGraphAttributeReference(const std::string& attribute) {
@@ -57,9 +69,17 @@ public:
     /// Returns a copy of the value of the given graph attribute
     AttributeValue getGraphAttribute(const std::string& attribute) const;
 
+    /// Stores the list of graph attributes in an StrVector
+    void getGraphAttributeList(StrVector& container) const;
+
     /// Returns a reference to the value of the given vertex attribute
-    AttributeValueVector& getVertexAttributeReference(const std::string& attribute) {
-        return m_vertexAttributes[attribute];
+    AttributeValueVector& getVertexAttributeReference(const std::string& attribute,
+            integer_t vcount) {
+        AttributeValueVector& result = m_vertexAttributes[attribute];
+        if (result.size() < static_cast<size_t>(vcount)) {
+            result.resize(vcount);
+        }
+        return result;
     }
 
     /// Returns a copy of the value of the given vertex attribute
@@ -68,6 +88,9 @@ public:
     /// Returns the value of the given vertex attribute for a given vertex index
     AttributeValue getVertexAttribute(const std::string& attribute,
         long int index) const;
+
+    /// Stores the list of vertex attributes in an StrVector
+    void getVertexAttributeList(StrVector& container) const;
 
     /// Checks whether a given edge attribute exists
     bool hasEdgeAttribute(const std::string& attribute) const;
@@ -79,7 +102,13 @@ public:
     bool hasVertexAttribute(const std::string& attribute) const;
 
     /// Sets the value of a given graph attribute
-    void setGraphAttribute(const std::string& attribute, const any& value);
+    void setGraphAttribute(const std::string& attribute, const AttributeValue& value);
+
+    /// Sets the value of a given vertex attribute for all vertices
+    void setVertexAttribute(const std::string& attribute, const AttributeValueVector& values);
+
+    /// Sets the value of a given edge attribute for all edges
+    void setEdgeAttribute(const std::string& attribute, const AttributeValueVector& values);
 
     friend class AttributeHandlerImpl;
 

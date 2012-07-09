@@ -16,7 +16,7 @@ private:
     igraph_eit_t m_eit;
 
     /// The graph the edge selector refers to
-    const Graph* m_pGraph;
+    Graph* m_pGraph;
 
 public:
     /*****************************/
@@ -24,7 +24,7 @@ public:
     /*****************************/
 
     /// Constructs an edge iterator from a selector
-    explicit EdgeIterator(const EdgeSelector& es) : m_pGraph(es.getGraph()) {
+    explicit EdgeIterator(EdgeSelector& es) : m_pGraph(es.getGraph()) {
         IGRAPH_TRY(igraph_eit_create(m_pGraph->c_graph(), *es.c_es(), &m_eit));
     }
 

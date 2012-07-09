@@ -126,8 +126,8 @@ public:
 
     /// Returns the head and tail vertices of an edge
     void edge(integer_t eid, integer_t* from, integer_t* to) const;
-    /// Returns the head and tail vertices of an edge
-    Edge edge(integer_t eid) const;
+    /// Returns the edge with the given index
+    Edge edge(integer_t eid);
 
     /// Returns the number of edges in the graph
     integer_t ecount() const { return igraph_ecount(m_pGraph); }
@@ -173,7 +173,7 @@ public:
     integer_t vcount() const { return igraph_vcount(m_pGraph); }
 
     /// Returns the vertex with the given index in the graph
-    Vertex vertex(integer_t vid) const;
+    Vertex vertex(integer_t vid);
 
     /*************/
     /* Operators */
@@ -204,7 +204,7 @@ public:
     /**
      * This method works similar to \c std::map<>.operator[]: if the attribute
      * is found, its value is returned; if the attribute is not found, a new
-     * attribute will be created with the default constructor of \c igraph::AttributeValue
+     * attribute will be created with the default constructor of \c AttributeValue 
      * and this will be returned. Therefore, this operator won't work on const
      * graphs.
      */

@@ -106,12 +106,12 @@ void Graph::edge(integer_t eid, integer_t* from, integer_t* to) const {
     IGRAPH_TRY(igraph_edge(m_pGraph, eid, from, to));
 }
 
-Edge Graph::edge(integer_t eid) const {
+Edge Graph::edge(integer_t eid) {
     assert(m_pGraph);
     return Edge(this, eid);
 }
 
-any Graph::getAttribute(const std::string& attribute) const {
+AttributeValue Graph::getAttribute(const std::string& attribute) const {
     return getAttributeHolder()->getGraphAttribute(attribute);
 }
 
@@ -169,7 +169,7 @@ Vector Graph::neighbors(long int vertex, NeighborMode mode) const {
     return result;
 }
 
-void Graph::setAttribute(const std::string& attribute, const any& value) {
+void Graph::setAttribute(const std::string& attribute, const AttributeValue& value) {
     return getAttributeHolder()->setGraphAttribute(attribute, value);
 }
 
@@ -179,7 +179,7 @@ void Graph::simplify(bool multiple, bool loops) {
     IGRAPH_TRY(igraph_simplify(m_pGraph, multiple, loops, 0));
 }
 
-Vertex Graph::vertex(integer_t vid) const {
+Vertex Graph::vertex(integer_t vid) {
     assert(m_pGraph);
     return Vertex(this, vid);
 }
@@ -194,7 +194,7 @@ Graph Graph::operator+(const Graph& other) const {
     return Graph(result.release());
 }
 
-any& Graph::operator[](const std::string& attribute) {
+AttributeValue& Graph::operator[](const std::string& attribute) {
     return getAttributeHolder()->getGraphAttributeReference(attribute);
 }
 

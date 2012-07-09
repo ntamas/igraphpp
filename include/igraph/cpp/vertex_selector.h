@@ -16,7 +16,7 @@ private:
     igraph_vs_t m_vs;
 
     /// The graph the vertex selector refers to
-    const Graph* m_pGraph;
+    Graph* m_pGraph;
 
 public:
     /*****************************/
@@ -24,25 +24,25 @@ public:
     /*****************************/
 
     /// Constructs an empty vertex selector
-    explicit VertexSelector(const Graph* pGraph = 0) {
+    explicit VertexSelector(Graph* pGraph = 0) {
         setGraph(pGraph);
         IGRAPH_TRY(igraph_vs_none(&m_vs));
     }
 
     /// Constructs a vertex selector that selects a single vertex
-    VertexSelector(integer_t vid, const Graph* pGraph = 0) {
+    VertexSelector(integer_t vid, Graph* pGraph = 0) {
         setGraph(pGraph);
         IGRAPH_TRY(igraph_vs_1(&m_vs, vid));
     }
 
     /// Constructs a vertex selector that selects a range of vertices
-    VertexSelector(integer_t from, integer_t to, const Graph* pGraph = 0) {
+    VertexSelector(integer_t from, integer_t to, Graph* pGraph = 0) {
         setGraph(pGraph);
         IGRAPH_TRY(igraph_vs_seq(&m_vs, from, to));
     }
 
     /// Constructs a vertex selector that handles a vector as a vertex selector
-    VertexSelector(Vector* vector, const Graph* pGraph = 0) {
+    VertexSelector(Vector* vector, Graph* pGraph = 0) {
         setGraph(pGraph);
         IGRAPH_TRY(igraph_vs_vector(&m_vs, vector->c_vector()));
     }
@@ -53,7 +53,7 @@ public:
      * The caller should not destroy the vertex selector on its own, ever;
      * the wrapper should be destroyed instead.
      */
-    VertexSelector(igraph_vs_t vs, const Graph* pGraph = 0) : m_vs(vs), m_pGraph(pGraph) {}
+    VertexSelector(igraph_vs_t vs, Graph* pGraph = 0) : m_vs(vs), m_pGraph(pGraph) {}
 
     /// Destroys the vertex selector
     ~VertexSelector() {
@@ -65,7 +65,7 @@ public:
     /******************/
 
     /// Creates a vertex selector that selects all vertices
-    static VertexSelector All(const Graph* pGraph = 0) {
+    static VertexSelector All(Graph* pGraph = 0) {
         igraph_vs_t vs;
         IGRAPH_TRY(igraph_vs_all(&vs));
         return VertexSelector(vs, pGraph);
@@ -88,8 +88,13 @@ public:
     /// Returns the value of the given vertex attribute for the vertices selected by the selector
     AttributeValueVector getAttribute(const std::string& attribute) const;
 
-    /// Returns the graph the vertex selector refers to
+    /// Returns the graph the vertex selector refers to (const version)
     const Graph* getGraph() const {
+        return m_pGraph;
+    }
+
+    /// Returns the graph the vertex selector refers to
+    Graph* getGraph() {
         return m_pGraph;
     }
 
@@ -109,7 +114,7 @@ public:
             const AttributeValueVector& values) const;
 
     /// Sets the graph the vertex selector refers to
-    void setGraph(const Graph* pGraph) {
+    void setGraph(Graph* pGraph) {
         m_pGraph = pGraph;
     }
 
@@ -126,11 +131,11 @@ private:
     VertexSelector& operator=(const VertexSelector&);
 };
 
-inline VertexSelector V(const Graph* graph) {
+inline VertexSelector V(Graph* graph) {
     return VertexSelector::All(graph);
 }
 
-inline VertexSelector V(const Graph& graph) {
+inline VertexSelector V(Graph& graph) {
     return VertexSelector::All(&graph);
 }
 

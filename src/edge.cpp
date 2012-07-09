@@ -9,16 +9,24 @@ integer_t Edge::destination() {
     return IGRAPH_TO(m_pGraph->c_graph(), m_index);
 }
 
-any Edge::getAttribute(const std::string& attribute) const {
+AttributeValue Edge::getAttribute(const std::string& attribute) const {
     const AttributeHolder& attributeHolder = *m_pGraph->getAttributeHolder();
     return attributeHolder.getEdgeAttribute(attribute, m_index);
 }
 
-any Edge::getAttribute(const std::string& attribute, const any& defaultValue) const {
+AttributeValue Edge::getAttribute(const std::string& attribute,
+        const AttributeValue& defaultValue) const {
     const AttributeHolder& attributeHolder = *m_pGraph->getAttributeHolder();
     if (!attributeHolder.hasEdgeAttribute(attribute))
         return defaultValue;
     return attributeHolder.getEdgeAttribute(attribute, m_index);
+}
+
+void Edge::setAttribute(const std::string& attribute, const AttributeValue& value) {
+    AttributeHolder& attributeHolder = *m_pGraph->getAttributeHolder();
+    AttributeValueVector& vec = attributeHolder.getEdgeAttributeReference(attribute,
+            m_pGraph->ecount());
+    vec[m_index] = value;
 }
 
 integer_t Edge::source() {

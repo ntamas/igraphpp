@@ -26,14 +26,16 @@ AttributeValueVector VertexSelector::getAttribute(const std::string& attribute) 
 
 void VertexSelector::setAttribute(const std::string& attribute,
         const AttributeValueVector& values) const {
+    /*
     if (isAll()) {
-        // m_pGraph->getAttributeHolder()->setVertexAttribute(attribute, values);
+        m_pGraph->getAttributeHolder()->setVertexAttribute(attribute, values);
         return;
     }
+    */
 
-    /*
     AttributeValueVector& allAttrs =
-        m_pGraph->getAttributeHolder()->getVertexAttributeReference(attribute);
+        m_pGraph->getAttributeHolder()->getVertexAttributeReference(attribute,
+                m_pGraph->vcount());
 
     igraph_vit_t vit;
     AttributeValueVector::const_iterator it = values.begin(), endIt = values.end();
@@ -45,7 +47,6 @@ void VertexSelector::setAttribute(const std::string& attribute,
         IGRAPH_VIT_NEXT(vit);
     }
     igraph_vit_destroy(&vit);
-    */
 }
 
 }           // end of namespaces
