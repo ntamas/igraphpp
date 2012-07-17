@@ -126,7 +126,7 @@ Vector Graph::getEdgelist(bool bycol) const {
     return result;
 }
 
-integer_t Graph::get_eid(integer_t source, integer_t target,
+integer_t Graph::getEid(integer_t source, integer_t target,
         bool directed, bool error) const {
     integer_t eid;
     IGRAPH_TRY(igraph_get_eid(m_pGraph, &eid, source, target, directed, error));

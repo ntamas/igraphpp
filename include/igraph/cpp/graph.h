@@ -141,7 +141,7 @@ public:
     void getEdgelist(Vector* result, bool bycol=false) const;
 
     /// Returns the ID of an arbitrary edge between the two given nodes
-    integer_t get_eid(integer_t source, integer_t target, bool directed=true,
+    integer_t getEid(integer_t source, integer_t target, bool directed=true,
             bool error=false) const;
 
     /// Returns whether the graph has the given graph attribute
