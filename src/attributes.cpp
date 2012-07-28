@@ -561,7 +561,6 @@ public:
     template <typename It>
     static int gettype_helper(const igraph_t *graph, igraph_attribute_type_t *type,
             const It& begin, const It& end) {
-        It iter = begin;
         igraph_attribute_type_t result = IGRAPH_ATTRIBUTE_DEFAULT;
 
         /* Infer the attribute type by evaluating the types of the items */
