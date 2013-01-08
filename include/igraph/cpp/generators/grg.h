@@ -1,7 +1,7 @@
 /* vim:set ts=4 sw=4 sts=4 et: */
 
-#ifndef IGRAPHPP_GENERATORS_FAMOUS_H
-#define IGRAPHPP_GENERATORS_FAMOUS_H
+#ifndef IGRAPHPP_GENERATORS_GRG_H
+#define IGRAPHPP_GENERATORS_GRG_H
 
 #include <memory>
 
@@ -15,4 +15,4 @@ std::auto_ptr<Graph> grg_game(integer_t nodes, real_t radius, bool torus = false
 
 }         // end of namespace
 
-#endif    // IGRAPHPP_GENERATORS_FAMOUS_H
+#endif    // IGRAPHPP_GENERATORS_GRG_H

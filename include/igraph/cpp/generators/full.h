@@ -15,4 +15,4 @@ std::auto_ptr<Graph> full(integer_t nodes, bool directed = false,
 
 }         // end of namespace
 
-#endif    // IGRAPHPP_GENERATORS_DETERMINISTIC_H
+#endif    // IGRAPHPP_GENERATORS_FULL_H
