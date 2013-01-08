@@ -8,18 +8,22 @@ add_library(igraphpp STATIC attributes
                             vertex
                             vertex_selector
 
-							analysis/components
-							analysis/non_simple
+                            analysis/components
+                            analysis/non_simple
 
-							generators/degree_sequence
-							generators/erdos_renyi
+                            generators/degree_sequence
+                            generators/erdos_renyi
+                            generators/famous
+                            generators/full
+                            generators/grg
                             generators/line_graph
+                            generators/ring
 
                             io/edgelist
                             io/gml
                             io/graphml
                             io/leda
-							io/lgl
+                            io/lgl
                             io/ncol
 )
 

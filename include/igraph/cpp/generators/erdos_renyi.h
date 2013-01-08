@@ -19,4 +19,4 @@ std::auto_ptr<Graph> erdos_renyi_game_gnp(integer_t n, real_t p,
 
 }         // end of namespace
 
-#endif    // IGRAPHPP_GENERATORS_DETERMINISTIC_H
+#endif    // IGRAPHPP_GENERATORS_ERDOS_RENYI_H

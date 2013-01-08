@@ -75,20 +75,6 @@ public:
     /* Static methods */
     /******************/
 
-    /// Constructs a famous graph by name
-    static Graph Famous(const std::string& name);
-
-    /// Constructs a full graph
-    static Graph Full(integer_t n, bool directed=false, bool loops=false);
-
-    /// Constructs a geometric random graph
-    static Graph GRG(integer_t nodes, real_t radius, bool torus=false,
-            Vector* x=0, Vector* y=0);
-
-    /// Constructs a ring graph
-    static Graph Ring(integer_t n, bool directed=false, bool mutual=true,
-            bool circular=true);
-
     /********************/
     /* Instance methods */
     /********************/

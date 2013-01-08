@@ -5,7 +5,11 @@
 
 #include <igraph/cpp/generators/degree_sequence.h>
 #include <igraph/cpp/generators/erdos_renyi.h>
+#include <igraph/cpp/generators/famous.h>
+#include <igraph/cpp/generators/full.h>
+#include <igraph/cpp/generators/grg.h>
 #include <igraph/cpp/generators/line_graph.h>
+#include <igraph/cpp/generators/ring.h>
 
 #endif    // IGRAPHPP_GENERATORS_H
 

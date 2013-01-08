@@ -26,32 +26,6 @@ Graph::~Graph() {
 /* Static methods */
 /******************/
 
-Graph Graph::Famous(const std::string& name) {
-    std::auto_ptr<igraph_t> result(new igraph_t);
-    IGRAPH_TRY(igraph_famous(result.get(), name.c_str()));
-    return Graph(result.release());
-}
-
-Graph Graph::Full(integer_t nodes, bool directed, bool loops) {
-    std::auto_ptr<igraph_t> result(new igraph_t);
-    IGRAPH_TRY(igraph_full(result.get(), nodes, directed, loops));
-    return Graph(result.release());
-}
-
-Graph Graph::GRG(integer_t nodes, real_t radius, bool torus,
-        Vector* x, Vector* y) {
-    std::auto_ptr<igraph_t> result(new igraph_t);
-    IGRAPH_TRY(igraph_grg_game(result.get(), nodes, radius, torus,
-                x->c_vector(), y->c_vector()));
-    return Graph(result.release());
-}
-
-Graph Graph::Ring(integer_t n, bool directed, bool mutual, bool circular) {
-    std::auto_ptr<igraph_t> result(new igraph_t);
-    IGRAPH_TRY(igraph_ring(result.get(), n, directed, mutual, circular));
-    return Graph(result.release());
-}
-
 /********************/
 /* Instance methods */
 /********************/
