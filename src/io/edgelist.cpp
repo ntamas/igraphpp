@@ -12,7 +12,7 @@ Graph read_edgelist(FILE* instream, integer_t n, bool directed) {
     return Graph(result.release());
 }
 
-void write_edgelist(FILE* outstream, const Graph& graph) {
+void write_edgelist(const Graph& graph, FILE* outstream) {
     IGRAPH_TRY(igraph_write_graph_edgelist(graph.c_graph(), outstream));
 }
 

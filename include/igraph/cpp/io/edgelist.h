@@ -11,7 +11,7 @@ namespace igraph {
 Graph read_edgelist(FILE* instream, integer_t n=0, bool directed=true);
 
 /// Writes the edge list of the graph to the given file
-void write_edgelist(FILE* outstream, const Graph& graph);
+void write_edgelist(const Graph& graph, FILE* outstream);
 
 }         // end of namespace
 

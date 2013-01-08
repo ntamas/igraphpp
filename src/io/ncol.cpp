@@ -12,7 +12,7 @@ Graph read_ncol(FILE* instream, bool names, AddWeights weights, bool directed) {
     return Graph(result.release());
 }
 
-void write_ncol(FILE* outstream, const Graph& graph, const std::string& names,
+void write_ncol(const Graph& graph, FILE* outstream, const std::string& names,
         const std::string& weights) {
     const char* names_str = names.length() > 0 ? names.c_str() : 0;
     const char* weights_str = weights.length() > 0 ? weights.c_str() : 0;

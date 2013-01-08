@@ -8,7 +8,7 @@
 namespace igraph {
 
 /// Writes the graph in LEDA format to the given file
-void write_leda(FILE* outstream, const Graph& graph,
+void write_leda(const Graph& graph, FILE* outstream,
         const std::string& vertex_attr_name = "",
         const std::string& edge_attr_name = "");
 

@@ -4,7 +4,7 @@
 
 namespace igraph {
 
-void write_leda(FILE* outstream, const Graph& graph,
+void write_leda(const Graph& graph, FILE* outstream,
         const std::string& vertex_attr_name,
         const std::string& edge_attr_name) {
     const char *vattr, *eattr;

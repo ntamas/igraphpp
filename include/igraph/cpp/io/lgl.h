@@ -13,7 +13,7 @@ Graph read_lgl(FILE* instream, bool names=true,
         bool directed=true);
 
 /// Writes a graph to an LGL file
-void write_lgl(FILE* outstream, const Graph& graph, const std::string& names="name",
+void write_lgl(const Graph& graph, FILE* outstream, const std::string& names="name",
         const std::string& weights="weight", bool isolates=true);
 
 }         // end of namespace

@@ -16,7 +16,7 @@ Graph read_ncol(FILE* instream, bool names=true,
         bool directed=true);
 
 /// Writes a graph to an NCOL file
-void write_ncol(FILE* outstream, const Graph& graph, const std::string& names="name",
+void write_ncol(const Graph& graph, FILE* outstream, const std::string& names="name",
         const std::string& weights="weight");
 
 }         // end of namespace
