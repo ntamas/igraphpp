@@ -39,6 +39,7 @@ void VertexSelector::setAttribute(const std::string& attribute,
 
     igraph_vit_t vit;
     AttributeValueVector::const_iterator it = values.begin();
+    AttributeValueVector::const_iterator endIt = values.end();
     IGRAPH_TRY(igraph_vit_create(m_pGraph->c_graph(), m_vs, &vit));
     while (!IGRAPH_VIT_END(vit)) {
         assert(it != endIt);
