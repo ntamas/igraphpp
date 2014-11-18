@@ -12,8 +12,8 @@ Graph read_graphml(FILE* instream, int index) {
     return Graph(result.release());
 }
 
-void write_graphml(const Graph& graph, FILE* outstream) {
-    IGRAPH_TRY(igraph_write_graph_graphml(graph.c_graph(), outstream));
+void write_graphml(const Graph& graph, FILE* outstream, bool prefixattr) {
+    IGRAPH_TRY(igraph_write_graph_graphml(graph.c_graph(), outstream, prefixattr));
 }
 
 }         // end of namespace

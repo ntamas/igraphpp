@@ -7,6 +7,7 @@
 #include <igraph/cpp/error.h>
 #include <igraph/cpp/ptr_vector.h>
 #include <igraph/cpp/vector.h>
+#include <igraph/cpp/vector_bool.h>
 
 namespace igraph {
 
@@ -219,6 +220,28 @@ public:
             return value.as<std::string>()->c_str();
 
         return empty;
+    }
+
+    static bool_t as_bool_attribute_value(const any& value) {
+        const std::type_info& type = value.type();
+
+        if (type == typeid(void))
+            return 0;
+
+        HANDLE_TYPE(bool);
+        HANDLE_TYPE(short int);
+        HANDLE_TYPE(unsigned short int);
+        HANDLE_TYPE(int);
+        HANDLE_TYPE(unsigned int);
+        HANDLE_TYPE(long int);
+        HANDLE_TYPE(unsigned long int);
+        HANDLE_TYPE(long long int);
+        HANDLE_TYPE(unsigned long long int);
+        HANDLE_TYPE(float);
+        HANDLE_TYPE(double);
+        HANDLE_TYPE(long double);
+
+        return 0;
     }
 
 #undef HANDLE_TYPE
@@ -558,6 +581,110 @@ public:
 
     /***********************************************************************/
 
+    static int get_bool_graph_attr(const igraph_t *graph, const char *name,
+            igraph_vector_bool_t *value) {
+        AttributeHolder& holder = *(static_cast<AttributeHolder*>(graph->attr));
+        AttributeHolder::GraphAttributeMap& attrs = holder.m_graphAttributes;
+        AttributeHolder::GraphAttributeMap::const_iterator it;
+
+        it = attrs.find(name);
+        if (it == attrs.end())
+            IGRAPH_ERROR("Unknown attribute", IGRAPH_EINVAL);
+
+        IGRAPH_CHECK(igraph_vector_bool_resize(value, 1));
+        VECTOR(*value)[0] = *it->second.as<igraph_bool_t>();
+
+        return IGRAPH_SUCCESS;
+    }
+
+    /***********************************************************************/
+
+    static int get_bool_vertex_attr(const igraph_t *graph, const char *name,
+            igraph_vs_t vs, igraph_vector_bool_t *value) {
+        integer_t vcount = igraph_vcount(graph);
+        integer_t i;
+        AttributeHolder& holder = *(static_cast<AttributeHolder*>(graph->attr));
+
+        if (!holder.hasVertexAttribute(name))
+            IGRAPH_ERROR("Unknown attribute", IGRAPH_EINVAL);
+
+        AttributeValueVector& ref = holder.getVertexAttributeReference(name, vcount);
+        VectorBool valueWrapper(value);
+
+        i = 0;
+
+        if (igraph_vs_is_all(&vs)) {
+            // Shortcut
+            valueWrapper.resize(vcount);
+            for (AttributeValueVector::const_iterator it = ref.begin(); it != ref.end(); ++it, ++i) {
+                valueWrapper[i] = as_bool_attribute_value(*it);
+            }
+        } else {
+            igraph_vit_t vit;
+            
+            valueWrapper.resize(0);
+
+            IGRAPH_CHECK(igraph_vit_create(graph, vs, &vit));
+            IGRAPH_FINALLY(igraph_vit_destroy, &vit);
+
+            while (!IGRAPH_VIT_END(vit)) {
+                integer_t vid = IGRAPH_VIT_GET(vit);
+                valueWrapper.push_back(as_bool_attribute_value(ref[vid]));
+                IGRAPH_VIT_NEXT(vit);
+            }
+
+            igraph_vit_destroy(&vit);
+            IGRAPH_FINALLY_CLEAN(1);
+        }
+
+        return IGRAPH_SUCCESS;
+    }
+
+    /***********************************************************************/
+
+    static int get_bool_edge_attr(const igraph_t *graph, const char *name,
+            igraph_es_t es, igraph_vector_bool_t *value) {
+        integer_t ecount = igraph_ecount(graph);
+        integer_t i;
+        AttributeHolder& holder = *(static_cast<AttributeHolder*>(graph->attr));
+
+        if (!holder.hasEdgeAttribute(name))
+            IGRAPH_ERROR("Unknown attribute", IGRAPH_EINVAL);
+
+        AttributeValueVector& ref = holder.getEdgeAttributeReference(name, ecount);
+        VectorBool valueWrapper(value);
+
+        i = 0;
+
+        if (igraph_es_is_all(&es)) {
+            // Shortcut
+            valueWrapper.resize(ecount);
+            for (AttributeValueVector::const_iterator it = ref.begin(); it != ref.end(); ++it, ++i) {
+                valueWrapper[i] = as_bool_attribute_value(*it);
+            }
+        } else {
+            igraph_eit_t eit;
+
+            valueWrapper.resize(0);
+
+            IGRAPH_CHECK(igraph_eit_create(graph, es, &eit));
+            IGRAPH_FINALLY(igraph_eit_destroy, &eit);
+
+            while (!IGRAPH_EIT_END(eit)) {
+                integer_t eid = IGRAPH_EIT_GET(eit);
+                valueWrapper.push_back(as_bool_attribute_value(ref[eid]));
+                IGRAPH_EIT_NEXT(eit);
+            }
+
+            igraph_eit_destroy(&eit);
+            IGRAPH_FINALLY_CLEAN(1);
+        }
+
+        return IGRAPH_SUCCESS;
+    }
+
+    /***********************************************************************/
+
     template <typename It>
     static int gettype_helper(const igraph_t *graph, igraph_attribute_type_t *type,
             const It& begin, const It& end) {
@@ -664,10 +791,13 @@ static igraph_attribute_table_t cpp_attribute_handler = {
     &AttributeHandlerImpl::gettype,
     &AttributeHandlerImpl::get_numeric_graph_attr,
     &AttributeHandlerImpl::get_string_graph_attr,
+    &AttributeHandlerImpl::get_bool_graph_attr,
     &AttributeHandlerImpl::get_numeric_vertex_attr,
     &AttributeHandlerImpl::get_string_vertex_attr,
+    &AttributeHandlerImpl::get_bool_vertex_attr,
     &AttributeHandlerImpl::get_numeric_edge_attr,
-    &AttributeHandlerImpl::get_string_edge_attr
+    &AttributeHandlerImpl::get_string_edge_attr,
+    &AttributeHandlerImpl::get_bool_edge_attr
 };
 
 void AttributeHandler::attach() {
