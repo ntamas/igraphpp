@@ -65,11 +65,29 @@ public:
         return EdgeSelector(es, pGraph);
     }
 
+    /// Creates an edge selector that selects all edges incident on a given vertex
+    static EdgeSelector Incident(integer_t vid, NeighborMode mode = IGRAPH_ALL,
+            Graph* pGraph = 0) {
+        igraph_es_t es;
+        IGRAPH_TRY(igraph_es_incident(&es, vid, mode));
+        return EdgeSelector(es, pGraph);
+    }
+
     /// Creates an edge selector from multiple edges defined by their endpoints
     static EdgeSelector Pairs(Vector& vector, bool directed=true, Graph* pGraph = 0) {
         igraph_es_t es;
         IGRAPH_TRY(igraph_es_pairs(&es, vector.c_vector(), directed));
         return EdgeSelector(es, pGraph);
+    }
+
+    /// Creates an edge selector that selects all inbound edges of a given vertex
+    static EdgeSelector Predecessors(integer_t vid, Graph* pGraph = 0) {
+        return Incident(vid, IGRAPH_IN, pGraph);
+    }
+
+    /// Creates an edge selector that selects all outbound edges of a given vertex
+    static EdgeSelector Successors(integer_t vid, Graph* pGraph = 0) {
+        return Incident(vid, IGRAPH_OUT, pGraph);
     }
 
     /********************/
