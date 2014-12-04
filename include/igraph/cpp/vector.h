@@ -52,8 +52,9 @@ public:
         : m_pVector(&m_vector), m_owner(true) {
         if (data) {
             IGRAPH_TRY(igraph_vector_init_copy(m_pVector, data, length));
-        } else
+        } else {
             IGRAPH_TRY(igraph_vector_init(m_pVector, length));
+        }
     }
 
     /// Constructs a wrapper that takes ownership of the given vector
@@ -71,7 +72,8 @@ public:
 
     /// Constructor from STL container
     template <typename InputIterator>
-    Vector(InputIterator first, InputIterator last) {
+    Vector(InputIterator first, InputIterator last)
+    : m_pVector(&m_vector), m_owner(true) {
         IGRAPH_TRY(igraph_vector_init(m_pVector, 0));
         while (first != last) {
             this->push_back(*first);
@@ -90,7 +92,7 @@ public:
     /******************/
 
     /// Constructs a vector containing a sequence
-    Vector Seq(value_type from, value_type to) {
+    static Vector Seq(value_type from, value_type to) {
         igraph_vector_t vec;
         IGRAPH_TRY(igraph_vector_init_seq(&vec, from, to));
         return Vector(vec);

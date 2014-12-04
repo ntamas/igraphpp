@@ -88,7 +88,7 @@ public:
     /******************/
 
     /// Constructs a vector containing a sequence
-    VectorLong Seq(value_type from, value_type to) {
+    static VectorLong Seq(value_type from, value_type to) {
         igraph_vector_long_t vec;
         IGRAPH_TRY(igraph_vector_long_init_seq(&vec, from, to));
         return VectorLong(vec);
