@@ -236,13 +236,28 @@ public:
         IGRAPH_TRY(igraph_vector_bool_swap(m_pVector, v2.m_pVector));
     }
 
+    /// Updates this vector from another one
+    void update(const VectorBool& other) {
+        IGRAPH_TRY(igraph_vector_bool_update(m_pVector, other.m_pVector));
+    }
+
+    /// Updates this vector from an STL container
+    template <typename InputIterator>
+    void update(InputIterator first, InputIterator last) {
+        this->clear();
+        while (first != last) {
+            this->push_back(*first);
+            ++first;
+        }
+    }
+
     /*************/
     /* Operators */
     /*************/
 
     /// Assignment operator: copies the given vector to this one
     VectorBool& operator=(const VectorBool& other) {
-        IGRAPH_TRY(igraph_vector_bool_update(m_pVector, other.m_pVector));
+        this->update(other);
         return *this;
     }
 
