@@ -130,7 +130,7 @@ public:
      * where the element was found, or where it should be inserted
      * if the element was not found to keep the vector sorted.
      */
-    bool binsearch(value_type what, long int *pos = 0) {
+    bool binsearch(value_type what, long int *pos = 0) const {
         return igraph_vector_long_binsearch(m_pVector, what, pos);
     }
 
@@ -145,7 +145,7 @@ public:
     }
 
     /// Returns whether a given element is in the vector, using linear search
-    bool contains(value_type e) {
+    bool contains(value_type e) const {
         return igraph_vector_long_contains(m_pVector, e);
     }
 
@@ -250,7 +250,7 @@ public:
     }
 
     /// Searches the vector for a given element from the given position
-    bool search(long int from, value_type what, long int* pos = 0) {
+    bool search(long int from, value_type what, long int* pos = 0) const {
         return igraph_vector_long_search(m_pVector, from, what, pos);
     }
 

@@ -127,7 +127,7 @@ public:
     }
 
     /// Returns whether a given element is in the vector, using linear search
-    bool contains(value_type e) {
+    bool contains(value_type e) const {
         return igraph_vector_bool_contains(m_pVector, e);
     }
 
