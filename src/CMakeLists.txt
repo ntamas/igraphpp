@@ -1,4 +1,5 @@
 add_library(igraphpp STATIC attributes
+                            centrality
                             edge
                             graph
                             matching

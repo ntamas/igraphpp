@@ -112,6 +112,7 @@ public:
 
     /// Returns the head and tail vertices of an edge
     void edge(integer_t eid, integer_t* from, integer_t* to) const;
+
     /// Returns the edge with the given index
     Edge edge(integer_t eid);
 
