@@ -26,5 +26,7 @@ add_library(igraphpp STATIC attributes
                             io/leda
                             io/lgl
                             io/ncol
+
+                            visitors/bfs
 )
 
