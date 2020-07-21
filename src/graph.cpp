@@ -163,7 +163,7 @@ Vertex Graph::vertex(integer_t vid) {
 /*************/
 
 Graph Graph::operator+(const Graph& other) const {
-    std::auto_ptr<igraph_t> result(new igraph_t);
+    std::unique_ptr<igraph_t> result(new igraph_t);
     IGRAPH_TRY(igraph_disjoint_union(result.get(), m_pGraph, other.m_pGraph));
     return Graph(result.release());
 }

@@ -7,7 +7,7 @@
 namespace igraph {
 
 Graph read_ncol(FILE* instream, bool names, AddWeights weights, bool directed) {
-    std::auto_ptr<igraph_t> result(new igraph_t);
+    std::unique_ptr<igraph_t> result(new igraph_t);
     IGRAPH_TRY(igraph_read_graph_ncol(result.get(), instream, 0, names, weights, directed));
     return Graph(result.release());
 }

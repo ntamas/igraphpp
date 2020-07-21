@@ -10,7 +10,7 @@ namespace igraph {
 class Graph;
 
 /// Generates a ring graph
-std::auto_ptr<Graph> ring(integer_t n, bool directed = false, bool mutual = false,
+std::unique_ptr<Graph> ring(integer_t n, bool directed = false, bool mutual = false,
         bool circular = true);
 
 }         // end of namespace

@@ -10,7 +10,7 @@ namespace igraph {
 class Graph;
 
 /// Generates a full graph with the given number of nodes
-std::auto_ptr<Graph> full(integer_t nodes, bool directed = false,
+std::unique_ptr<Graph> full(integer_t nodes, bool directed = false,
         bool loops = false);
 
 }         // end of namespace

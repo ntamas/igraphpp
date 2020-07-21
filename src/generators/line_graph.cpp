@@ -7,10 +7,10 @@
 
 namespace igraph {
 
-std::auto_ptr<Graph> line_graph(const Graph& graph) {
-    std::auto_ptr<igraph_t> result(new igraph_t);
+std::unique_ptr<Graph> line_graph(const Graph& graph) {
+    std::unique_ptr<igraph_t> result(new igraph_t);
     IGRAPH_TRY(igraph_linegraph(graph.c_graph(), result.get()));
-    return std::auto_ptr<Graph>(new Graph(result));
+    return std::unique_ptr<Graph>(new Graph(result.release()));
 }
 
 }         // end of namespaces

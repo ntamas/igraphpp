@@ -39,7 +39,7 @@ public:
     Graph(long numVertices = 0, bool directed = false) : m_pGraph(new igraph_t) {
         IGRAPH_TRY(igraph_empty(m_pGraph, numVertices, directed));
     }
-    
+
     /// Constructs a wrapper that wraps the given igraph_t instance
     /**
      * The ownership of the wrapped instance is stolen by the wrapper.
@@ -60,7 +60,7 @@ public:
      *
      * This function never throws an exception.
      */
-    Graph(std::auto_ptr<igraph_t> graph) throw() : m_pGraph(graph.release()) {
+    Graph(std::unique_ptr<igraph_t> graph) throw() : m_pGraph(graph.release()) {
     }
 
     /// Copy constructor
@@ -191,7 +191,7 @@ public:
     /**
      * This method works similar to \c std::map<>.operator[]: if the attribute
      * is found, its value is returned; if the attribute is not found, a new
-     * attribute will be created with the default constructor of \c AttributeValue 
+     * attribute will be created with the default constructor of \c AttributeValue
      * and this will be returned. Therefore, this operator won't work on const
      * graphs.
      */
