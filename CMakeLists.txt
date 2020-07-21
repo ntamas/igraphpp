@@ -1,7 +1,11 @@
 cmake_minimum_required(VERSION 3.16)
 cmake_policy(SET CMP0003 NEW)
-project(igraphpp C CXX)
 
+project(igraphpp C CXX)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+#TODO target check should be in find module
+#     rework find module
 if(NOT TARGET igraph)
     set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/etc/cmake;${CMAKE_MODULE_PATH})
     find_package(igraph REQUIRED)
@@ -42,7 +46,6 @@ add_library(igraphpp STATIC
 
 target_include_directories(igraphpp PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include
-    ${CMAKE_CURRENT_BINARY_DIR}/include
 )
 
 target_link_libraries(igraphpp PUBLIC igraph)
