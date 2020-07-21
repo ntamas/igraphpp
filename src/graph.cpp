@@ -18,7 +18,7 @@ namespace igraph {
 Graph::~Graph() {
     if (m_pGraph) {
         igraph_destroy(m_pGraph);
-        delete m_pGraph;
+        m_pGraph = nullptr;
     }
 }
 
