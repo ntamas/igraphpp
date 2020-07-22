@@ -21,7 +21,7 @@ if(IGRAPH_PATH AND IGRAPH_PATH_FORCE)
     file(MAKE_DIRECTORY ${IGRAPH_PATH}/include)
     target_include_directories(igraph INTERFACE ${IGRAPH_PATH}/include)
     set_property(TARGET igraph PROPERTY IMPORTED_LOCATION ${IGRAPH_PATH}/lib/${libname})
-    set(Igraph_FOUND TRUE)
+    set(Igraph_FOUND TRUE PARENT_SCOPE)
     return()
 endif()
 
