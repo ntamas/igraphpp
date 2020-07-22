@@ -8,7 +8,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 #     rework find module
 if(NOT TARGET igraph)
     set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/etc/cmake;${CMAKE_MODULE_PATH})
-    find_package(igraph REQUIRED)
+    find_package(Igraph REQUIRED)
 endif()
 
 add_library(igraphpp STATIC
