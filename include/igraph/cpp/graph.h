@@ -162,6 +162,9 @@ public:
     /// Returns the vertex with the given index in the graph
     Vertex vertex(integer_t vid);
 
+    Graph induced_subgraph(Vector allowed_vertices) const;
+    Graph induced_subgraph(long int start_vertex, Vector deleted_vertices) const;
+
     /*************/
     /* Operators */
     /*************/
