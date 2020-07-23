@@ -163,7 +163,6 @@ public:
     Vertex vertex(integer_t vid);
 
     Graph induced_subgraph(Vector const& allowed_vertices) const;
-    Graph induced_subgraph(long int start_vertex, Vector const& deleted_vertices) const;
 
     /*************/
     /* Operators */

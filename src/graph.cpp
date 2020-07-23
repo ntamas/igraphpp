@@ -11,6 +11,7 @@
 #include <igraph/cpp/graph.h>
 #include <igraph/cpp/vertex.h>
 #include <igraph/cpp/vertex_selector.h>
+#include <igraph/cpp/util/allocation_guard.h>
 #include <memory>
 
 namespace igraph {
@@ -160,16 +161,18 @@ Vertex Graph::vertex(integer_t vid) {
 }
 
 Graph Graph::induced_subgraph(Vector const& allowed_vertices) const {
+    // create selector from Vector
     igraph_vs_t* selector;
-    igraph_vs_vector(selector, allowed_vertices.c_vector());
-    igraph_t* induced;
-    IGRAPH_TRY(igraph_induced_subgraph(m_pGraph, induced, selector, IGRAPH_SUBGRAPH_AUTO));
-    igraph_vs_destroy(selector); // add raii guard.
-    return Graph(induced);
-}
+    IGRAPH_TRY(igraph_vs_vector(selector, allowed_vertices.c_vector()));
+    AllocationGuard delete_vs([&]{
+        igraph_vs_destroy(selector);
+    });
 
-Graph Graph::induced_subgraph(long int start_vertex, Vector const& deleted_vertices) const {
-    throw std::runtime_error("not implemented");
+    // use selector to create subgraph
+    igraph_t* induced;
+    IGRAPH_TRY(igraph_induced_subgraph(m_pGraph, induced, *selector, IGRAPH_SUBGRAPH_AUTO));
+
+    return Graph(induced);
 }
 
 /*************/
