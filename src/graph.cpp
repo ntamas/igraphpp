@@ -5,6 +5,7 @@
 #include <igraph/igraph_games.h>
 #include <igraph/igraph_operators.h>
 #include <igraph/igraph_structural.h>
+
 #include <igraph/cpp/edge.h>
 #include <igraph/cpp/edge_selector.h>
 #include <igraph/cpp/graph.h>
@@ -156,6 +157,19 @@ void Graph::simplify(bool multiple, bool loops) {
 Vertex Graph::vertex(integer_t vid) {
     assert(m_pGraph);
     return Vertex(this, vid);
+}
+
+Graph Graph::induced_subgraph(Vector const& allowed_vertices) const {
+    igraph_vs_t* selector;
+    igraph_vs_vector(selector, allowed_vertices.c_vector());
+    igraph_t* induced;
+    IGRAPH_TRY(igraph_induced_subgraph(m_pGraph, induced, selector, IGRAPH_SUBGRAPH_AUTO));
+    igraph_vs_destroy(selector); // add raii guard.
+    return Graph(induced);
+}
+
+Graph Graph::induced_subgraph(long int start_vertex, Vector const& deleted_vertices) const {
+    throw std::runtime_error("not implemented");
 }
 
 /*************/
