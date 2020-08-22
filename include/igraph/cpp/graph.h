@@ -164,6 +164,20 @@ public:
 
     Graph induced_subgraph(Vector const& allowed_vertices) const;
 
+    /// Returns a bi-directed copy of the graph
+    /**
+     * If the graph is directed, the method returns a copy of the graph.
+     * Otherwise, it returns a copy of the bi-directed version of the graph,
+     * i.e., replaces every undirected edge {v,w} by two edges (v,w) and (w,v).
+     */
+    Graph bi_directed_copy() const{
+        igraph_t* new_graph_c;
+        IGRAPH_TRY(igraph_copy(new_graph_c, m_pGraph));
+        Graph new_graph(new_graph_c);
+        IGRAPH_TRY(igraph_to_directed(new_graph.m_pGraph, IGRAPH_TO_DIRECTED_MUTUAL));
+        return new_graph;
+    }
+
     /*************/
     /* Operators */
     /*************/

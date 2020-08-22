@@ -33,6 +33,7 @@ add_library(igraphpp STATIC
     src/generators/famous
     src/generators/full
     src/generators/grg
+    src/generators/lattice
     src/generators/line_graph
     src/generators/ring
 
