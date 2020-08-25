@@ -14,7 +14,8 @@ class Graph;
 std::unique_ptr<Graph> lattice(const Vector& dimvector,
                                integer_t nei,
                                bool directed = false,
-                               bool mutual = false);
+                               bool mutual = false,
+                               bool circular = false);
 
 }         // end of namespace
 
