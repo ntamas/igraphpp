@@ -24,6 +24,7 @@ add_library(igraphpp STATIC
     src/vector_long
     src/vertex
     src/vertex_selector
+    src/isomorphism
 
     src/analysis/components
     src/analysis/non_simple
