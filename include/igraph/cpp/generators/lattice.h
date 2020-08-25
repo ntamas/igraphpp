@@ -4,6 +4,7 @@
 #define IGRAPHPP_GENERATORS_LATTICE_H
 
 #include <memory>
+#include <igraph/cpp/vector.h>
 
 namespace igraph {
 

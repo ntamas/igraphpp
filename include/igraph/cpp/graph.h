@@ -9,6 +9,7 @@
 #include <igraph/igraph_datatype.h>
 #include <igraph/igraph_foreign.h>
 #include <igraph/igraph_interface.h>
+#include <igraph/igraph_conversion.h>
 #include <igraph/cpp/attributes.h>
 #include <stdexcept>
 #include <vector>

@@ -2,6 +2,7 @@
 
 #include <igraph/cpp/graph.h>
 #include <igraph/cpp/generators/lattice.h>
+#include <igraph/igraph_constructors.h>
 
 namespace igraph {
 
@@ -11,13 +12,15 @@ namespace igraph {
 std::unique_ptr<Graph> lattice(const Vector& dimvector,
                                integer_t nei,
                                bool directed,
-                               bool mutual) {
+                               bool mutual,
+                               bool circular) {
     std::unique_ptr<igraph_t> result(new igraph_t);
     IGRAPH_TRY(igraph_lattice(result.get(),
                               dimvector.c_vector(),
                               nei,
                               directed,
-                              mutual));
+                              mutual,
+                              circular));
     return std::unique_ptr<Graph>(new Graph(result.release()));
 }
 
