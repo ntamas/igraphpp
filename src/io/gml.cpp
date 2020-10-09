@@ -7,7 +7,7 @@
 namespace igraph {
 
 Graph read_gml(FILE* instream) {
-    std::auto_ptr<igraph_t> result(new igraph_t);
+    std::unique_ptr<igraph_t> result(new igraph_t);
     IGRAPH_TRY(igraph_read_graph_gml(result.get(), instream));
     return Graph(result.release());
 }

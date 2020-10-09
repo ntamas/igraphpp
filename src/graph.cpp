@@ -5,11 +5,13 @@
 #include <igraph/igraph_games.h>
 #include <igraph/igraph_operators.h>
 #include <igraph/igraph_structural.h>
+
 #include <igraph/cpp/edge.h>
 #include <igraph/cpp/edge_selector.h>
 #include <igraph/cpp/graph.h>
 #include <igraph/cpp/vertex.h>
 #include <igraph/cpp/vertex_selector.h>
+#include <igraph/cpp/util/allocation_guard.h>
 #include <memory>
 
 namespace igraph {
@@ -18,7 +20,7 @@ namespace igraph {
 Graph::~Graph() {
     if (m_pGraph) {
         igraph_destroy(m_pGraph);
-        delete m_pGraph;
+        m_pGraph = nullptr;
     }
 }
 
@@ -158,12 +160,27 @@ Vertex Graph::vertex(integer_t vid) {
     return Vertex(this, vid);
 }
 
+Graph Graph::induced_subgraph(Vector const& allowed_vertices) const {
+    // create selector from Vector
+    igraph_vs_t* selector;
+    IGRAPH_TRY(igraph_vs_vector(selector, allowed_vertices.c_vector()));
+    AllocationGuard delete_vs([&]{
+        igraph_vs_destroy(selector);
+    });
+
+    // use selector to create subgraph
+    igraph_t* induced;
+    IGRAPH_TRY(igraph_induced_subgraph(m_pGraph, induced, *selector, IGRAPH_SUBGRAPH_AUTO));
+
+    return Graph(induced);
+}
+
 /*************/
 /* Operators */
 /*************/
 
 Graph Graph::operator+(const Graph& other) const {
-    std::auto_ptr<igraph_t> result(new igraph_t);
+    std::unique_ptr<igraph_t> result(new igraph_t);
     IGRAPH_TRY(igraph_disjoint_union(result.get(), m_pGraph, other.m_pGraph));
     return Graph(result.release());
 }

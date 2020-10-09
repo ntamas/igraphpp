@@ -5,10 +5,10 @@
 
 namespace igraph {
 
-std::auto_ptr<Graph> ring(integer_t n, bool directed, bool mutual, bool circular) {
-    std::auto_ptr<igraph_t> result(new igraph_t);
+std::unique_ptr<Graph> ring(integer_t n, bool directed, bool mutual, bool circular) {
+    std::unique_ptr<igraph_t> result(new igraph_t);
     IGRAPH_TRY(igraph_ring(result.get(), n, directed, mutual, circular));
-    return std::auto_ptr<Graph>(new Graph(result));
+    return std::unique_ptr<Graph>(new Graph(result.release()));
 }
 
 }         // end of namespaces

@@ -10,7 +10,7 @@ namespace igraph {
 class Graph;
 
 /// Generates a famous graph given its name
-std::auto_ptr<Graph> famous(const std::string& name);
+std::unique_ptr<Graph> famous(const std::string& name);
 
 }         // end of namespace
 

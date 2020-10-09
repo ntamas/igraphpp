@@ -1,50 +1,55 @@
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 3.16)
 cmake_policy(SET CMP0003 NEW)
 
-#####################################################################
-# General project properties
-#####################################################################
-
 project(igraphpp C CXX)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-#####################################################################
-# Build options
-#####################################################################
+#TODO target check should be in find module
+#     rework find module
+if(NOT TARGET igraph)
+    set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/etc/cmake;${CMAKE_MODULE_PATH})
+    find_package(Igraph REQUIRED)
+endif()
 
-#####################################################################
-# Version information
-#####################################################################
+add_library(igraphpp STATIC
+    src/attributes
+    src/centrality
+    src/edge
+    src/graph
+    src/matching
+    src/vector
+    src/vector_bool
+    src/vector_long
+    src/vertex
+    src/vertex_selector
+    src/isomorphism
 
-#####################################################################
-# Tweaking CMake
-#####################################################################
+    src/analysis/components
+    src/analysis/non_simple
 
-#####################################################################
-# Find dependencies
-#####################################################################
+    src/generators/degree_sequence
+    src/generators/erdos_renyi
+    src/generators/famous
+    src/generators/full
+    src/generators/grg
+    src/generators/lattice
+    src/generators/line_graph
+    src/generators/ring
 
-set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/etc/cmake;${CMAKE_MODULE_PATH})
-find_package(igraph REQUIRED)
+    src/io/edgelist
+    src/io/gml
+    src/io/graphml
+    src/io/leda
+    src/io/lgl
+    src/io/ncol
 
-#####################################################################
-# Compiler flags for different build configurations
-#####################################################################
+    src/visitors/bfs
+)
 
-set(CMAKE_C_FLAGS   "${CMAKE_ARCH_FLAGS} -Wall")
-set(CMAKE_CXX_FLAGS "${CMAKE_ARCH_FLAGS} -Wall")
-set(CMAKE_C_FLAGS_DEBUG   "${CMAKE_ARCH_FLAGS} -O0 -ggdb")
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_ARCH_FLAGS} -O0 -ggdb")
-set(CMAKE_C_FLAGS_RELEASE   "${CMAKE_ARCH_FLAGS} -O3 -DNDEBUG -Wall -s")
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_ARCH_FLAGS} -O3 -DNDEBUG -Wall -s")
-set(CMAKE_C_FLAGS_PROFILING "${CMAKE_ARCH_FLAGS} -pg")
-set(CMAKE_CXX_FLAGS_PROFILING "${CMAKE_ARCH_FLAGS} -pg")
+target_include_directories(igraphpp PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
 
-include_directories(${igraph_INCLUDE_DIRS}
-                    ${CMAKE_CURRENT_SOURCE_DIR}/include
-                    ${CMAKE_CURRENT_BINARY_DIR}/include)
-
-#####################################################################
-# Process subdirectories
-#####################################################################
-
-add_subdirectory(src)
+target_link_libraries(igraphpp PUBLIC igraph)

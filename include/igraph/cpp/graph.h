@@ -9,6 +9,7 @@
 #include <igraph/igraph_datatype.h>
 #include <igraph/igraph_foreign.h>
 #include <igraph/igraph_interface.h>
+#include <igraph/igraph_conversion.h>
 #include <igraph/cpp/attributes.h>
 #include <stdexcept>
 #include <vector>
@@ -39,7 +40,7 @@ public:
     Graph(long numVertices = 0, bool directed = false) : m_pGraph(new igraph_t) {
         IGRAPH_TRY(igraph_empty(m_pGraph, numVertices, directed));
     }
-    
+
     /// Constructs a wrapper that wraps the given igraph_t instance
     /**
      * The ownership of the wrapped instance is stolen by the wrapper.
@@ -60,7 +61,7 @@ public:
      *
      * This function never throws an exception.
      */
-    Graph(std::auto_ptr<igraph_t> graph) throw() : m_pGraph(graph.release()) {
+    Graph(std::unique_ptr<igraph_t> graph) throw() : m_pGraph(graph.release()) {
     }
 
     /// Copy constructor
@@ -162,6 +163,22 @@ public:
     /// Returns the vertex with the given index in the graph
     Vertex vertex(integer_t vid);
 
+    Graph induced_subgraph(Vector const& allowed_vertices) const;
+
+    /// Returns a bi-directed copy of the graph
+    /**
+     * If the graph is directed, the method returns a copy of the graph.
+     * Otherwise, it returns a copy of the bi-directed version of the graph,
+     * i.e., replaces every undirected edge {v,w} by two edges (v,w) and (w,v).
+     */
+    Graph bi_directed_copy() const{
+        igraph_t* new_graph_c;
+        IGRAPH_TRY(igraph_copy(new_graph_c, m_pGraph));
+        Graph new_graph(new_graph_c);
+        IGRAPH_TRY(igraph_to_directed(new_graph.m_pGraph, IGRAPH_TO_DIRECTED_MUTUAL));
+        return new_graph;
+    }
+
     /*************/
     /* Operators */
     /*************/
@@ -191,7 +208,7 @@ public:
     /**
      * This method works similar to \c std::map<>.operator[]: if the attribute
      * is found, its value is returned; if the attribute is not found, a new
-     * attribute will be created with the default constructor of \c AttributeValue 
+     * attribute will be created with the default constructor of \c AttributeValue
      * and this will be returned. Therefore, this operator won't work on const
      * graphs.
      */

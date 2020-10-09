@@ -10,11 +10,11 @@ namespace igraph {
 class Graph;
 
 /// Generates an undirected random graph with a given degree sequence
-std::auto_ptr<Graph> degree_sequence_game(const Vector& degrees,
+std::unique_ptr<Graph> degree_sequence_game(const Vector& degrees,
         DegreeSequenceMethod method = IGRAPH_DEGSEQ_SIMPLE);
 
 /// Generates a directed random graph with a given degree sequence
-std::auto_ptr<Graph> degree_sequence_game(const Vector& outdegrees, const Vector& indegrees,
+std::unique_ptr<Graph> degree_sequence_game(const Vector& outdegrees, const Vector& indegrees,
         DegreeSequenceMethod method = IGRAPH_DEGSEQ_SIMPLE);
 
 }         // end of namespace
