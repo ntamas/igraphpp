@@ -1,32 +1,32 @@
-add_library(igraphpp STATIC attributes
-                            centrality
-                            edge
-                            graph
-                            matching
-                            vector
-                            vector_bool
-                            vector_long
-                            vertex
-                            vertex_selector
+add_library(igraphpp STATIC attributes.cpp
+                            centrality.cpp
+                            edge.cpp
+                            graph.cpp
+                            matching.cpp
+                            vector.cpp
+                            vector_bool.cpp
+                            vector_long.cpp
+                            vertex.cpp
+                            vertex_selector.cpp
 
-                            analysis/components
-                            analysis/non_simple
+                            analysis/components.cpp
+                            analysis/non_simple.cpp
 
-                            generators/degree_sequence
-                            generators/erdos_renyi
-                            generators/famous
-                            generators/full
-                            generators/grg
-                            generators/line_graph
-                            generators/ring
+                            generators/degree_sequence.cpp
+                            generators/erdos_renyi.cpp
+                            generators/famous.cpp
+                            generators/full.cpp
+                            generators/grg.cpp
+                            generators/line_graph.cpp
+                            generators/ring.cpp
 
-                            io/edgelist
-                            io/gml
-                            io/graphml
-                            io/leda
-                            io/lgl
-                            io/ncol
+                            io/edgelist.cpp
+                            io/gml.cpp
+                            io/graphml.cpp
+                            io/leda.cpp
+                            io/lgl.cpp
+                            io/ncol.cpp
 
-                            visitors/bfs
+                            visitors/bfs.cpp
 )
 
