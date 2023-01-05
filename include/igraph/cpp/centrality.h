@@ -10,9 +10,9 @@ class Vector;
 class VertexSelector;
 
 Vector betweenness(const Graph& graph, const VertexSelector& vids,
-        bool directed = true, const Vector* weights = 0, bool nobigint = true);
+        bool directed = true, const Vector* weights = 0);
 void betweenness(const Graph& graph, Vector* result, const VertexSelector& vids,
-        bool directed = true, const Vector* weights = 0, bool nobigint = true);
+        bool directed = true, const Vector* weights = 0);
 
 }         // end of namespace
 

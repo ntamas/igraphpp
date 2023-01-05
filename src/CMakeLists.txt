@@ -5,7 +5,7 @@ add_library(igraphpp STATIC attributes.cpp
                             matching.cpp
                             vector.cpp
                             vector_bool.cpp
-                            vector_long.cpp
+                            vector_int.cpp
                             vertex.cpp
                             vertex_selector.cpp
 

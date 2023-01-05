@@ -5,8 +5,8 @@
 
 namespace igraph {
 
-long int VectorBool::operator*(const VectorBool& vector) const {
-    long int result = 0;
+integer_t VectorBool::operator*(const VectorBool& vector) const {
+    integer_t result = 0;
 
     assert(vector.size() == size());
 

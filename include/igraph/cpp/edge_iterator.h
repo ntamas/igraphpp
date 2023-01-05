@@ -71,7 +71,7 @@ public:
     }
 
     /// Returns the number of edges in the iterator
-    long int size() {
+    integer_t size() {
         return IGRAPH_EIT_SIZE(m_eit);
     }
 

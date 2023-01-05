@@ -87,32 +87,32 @@ public:
     }
 
     /// Fills the matrix with the given element
-    void fill(igraph_real_t element) {
+    void fill(real_t element) {
         igraph_matrix_fill(&m_matrix, element);
     }
 
     /// Returns the given column of the matrix as a vector
-    Vector getCol(long int index) const {
+    Vector getCol(integer_t index) const {
         Vector result(nrow());
         IGRAPH_TRY(igraph_matrix_get_col(&m_matrix, result.c_vector(), index));
         return result;
     }
 
     /// Returns the given column of the matrix as a vector
-    void getCol(long int index, Vector& result) const {
+    void getCol(integer_t index, Vector& result) const {
         result.resize(nrow());
         IGRAPH_TRY(igraph_matrix_get_col(&m_matrix, result.c_vector(), index));
     }
 
     /// Returns the given row of the matrix as a vector
-    Vector getRow(long int index) const {
+    Vector getRow(integer_t index) const {
         Vector result(ncol());
         IGRAPH_TRY(igraph_matrix_get_row(&m_matrix, result.c_vector(), index));
         return result;
     }
 
     /// Returns the given row of the matrix as a vector
-    void getRow(long int index, Vector& result) const {
+    void getRow(integer_t index, Vector& result) const {
         result.resize(ncol());
         IGRAPH_TRY(igraph_matrix_get_row(&m_matrix, result.c_vector(), index));
     }
@@ -210,12 +210,12 @@ public:
     }
 
     /// Returns the element with the given row and column indices
-    igraph_real_t& operator()(long int ri, long int ci) {
+    igraph_real_t& operator()(integer_t ri, integer_t ci) {
         return MATRIX(m_matrix, ri, ci);
     }
 
     /// Returns the element with the given row and column indices (const variant)
-    igraph_real_t& operator()(long int ri, long int ci) const {
+    igraph_real_t& operator()(integer_t ri, integer_t ci) const {
         return MATRIX(m_matrix, ri, ci);
     }
 

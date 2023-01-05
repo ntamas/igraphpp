@@ -33,7 +33,7 @@ public:
     /*****************************/
 
     /// Constructs a pointer vector
-    explicit PtrVector(long int length = 0) : m_owner(true) {
+    explicit PtrVector(integer_t length = 0) : m_owner(true) {
         IGRAPH_TRY(igraph_vector_ptr_init(&m_vector_ptr, length));
     }
 
@@ -120,12 +120,12 @@ public:
     }
 
     /// Returns an element of the vector cast to the given pointer type
-    value_type get(long int index) {
+    value_type get(integer_t index) {
         return static_cast<T>(VECTOR(m_vector_ptr)[index]);
     }
 
     /// Returns an element of the vector cast to the given pointer type (const)
-    value_type const get(int index) const {
+    value_type const get(integer_t index) const {
         return static_cast<T const>(VECTOR(m_vector_ptr)[index]);
     }
 
@@ -135,7 +135,7 @@ public:
     }
 
     /// Resizes the vector
-    void resize(long int newsize) {
+    void resize(integer_t newsize) {
         IGRAPH_TRY(igraph_vector_ptr_resize(&m_vector_ptr, newsize));
     }
 
@@ -152,7 +152,7 @@ public:
     PtrVector& operator=(const PtrVector& other);
 
     /// Returns the element with the given index
-    reference operator[](long int index) {
+    reference operator[](integer_t index) {
         return VECTOR(m_vector_ptr)[index];
     }
 };

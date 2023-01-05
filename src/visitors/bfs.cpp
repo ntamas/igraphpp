@@ -5,18 +5,18 @@
 
 namespace igraph {
 
-void bfs(const Graph& graph, integer_t root, Vector* roots, NeighborMode mode,
-        bool unreachable, Vector* restricted, Vector* order, Vector* rank,
-        Vector* father, Vector* pred, Vector* succ, Vector* dist,
+void bfs(const Graph& graph, integer_t root, VectorInt* roots, NeighborMode mode,
+        bool unreachable, VectorInt* restricted, VectorInt* order, VectorInt* rank,
+        VectorInt* father, VectorInt* pred, VectorInt* succ, VectorInt* dist,
         BFSHandler callback, void* extra) {
-    igraph_vector_t* c_roots;
-    igraph_vector_t* c_restricted;
-    igraph_vector_t* c_order;
-    igraph_vector_t* c_rank;
-    igraph_vector_t* c_father;
-    igraph_vector_t* c_pred;
-    igraph_vector_t* c_succ;
-    igraph_vector_t* c_dist;
+    igraph_vector_int_t* c_roots;
+    igraph_vector_int_t* c_restricted;
+    igraph_vector_int_t* c_order;
+    igraph_vector_int_t* c_rank;
+    igraph_vector_int_t* c_father;
+    igraph_vector_int_t* c_pred;
+    igraph_vector_int_t* c_succ;
+    igraph_vector_int_t* c_dist;
 
     c_roots = (roots == 0) ? 0 : roots->c_vector();
     c_restricted = (restricted == 0) ? 0 : restricted->c_vector();

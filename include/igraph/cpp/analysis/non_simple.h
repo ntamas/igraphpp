@@ -4,7 +4,8 @@
 #define IGRAPHPP_ANALYSIS_NON_SIMPLE_H
 
 #include <igraph/cpp/types.h>
-#include <igraph/cpp/vector.h>
+#include <igraph/cpp/vector_bool.h>
+#include <igraph/cpp/vector_int.h>
 
 namespace igraph {
 
@@ -12,7 +13,7 @@ class EdgeSelector;
 class Graph;
 
 /// For each edge in the edge selector, tells its multiplicity
-Vector count_multiple(const EdgeSelector& es);
+VectorInt count_multiple(const EdgeSelector& es);
 
 /// Decides whether the input graph has multiple edges
 bool has_multiple(const Graph& graph);

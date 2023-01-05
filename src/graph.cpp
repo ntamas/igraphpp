@@ -31,24 +31,24 @@ Graph::~Graph() {
 /********************/
 
 void Graph::addEdge(igraph_integer_t source, igraph_integer_t target) {
-    Vector edge(2);
+    VectorInt edge(2);
     edge[0] = source; edge[1] = target;
     addEdges(edge);
 }
 
-void Graph::addEdges(const Vector& edges) {
+void Graph::addEdges(const VectorInt& edges) {
     assert(m_pGraph);
     IGRAPH_TRY(igraph_add_edges(m_pGraph, edges.c_vector(), 0));
 }
 
 void Graph::addVertex() { addVertices(1); }
 
-void Graph::addVertices(long int numVertices) {
+void Graph::addVertices(integer_t numVertices) {
     assert(m_pGraph);
     IGRAPH_TRY(igraph_add_vertices(m_pGraph, numVertices, 0));
 }
 
-bool Graph::areConnected(long int u, long int v) const {
+bool Graph::areConnected(integer_t u, integer_t v) const {
     igraph_bool_t result;
 
     assert(m_pGraph);
@@ -57,13 +57,13 @@ bool Graph::areConnected(long int u, long int v) const {
     return result;
 }
 
-Vector Graph::degree(const VertexSelector& vids, NeighborMode mode, bool loops) const {
-    Vector result;
+VectorInt Graph::degree(const VertexSelector& vids, NeighborMode mode, bool loops) const {
+    VectorInt result;
     degree(&result, vids, mode, loops);
     return result;
 }
 
-void Graph::degree(Vector* result, const VertexSelector& vids,
+void Graph::degree(VectorInt* result, const VertexSelector& vids,
                    NeighborMode mode, bool loops) const {
     assert(m_pGraph);
     IGRAPH_TRY(igraph_degree(m_pGraph, result->c_vector(), *vids.c_vs(),
@@ -89,13 +89,13 @@ AttributeValue Graph::getAttribute(const std::string& attribute) const {
     return getAttributeHolder()->getGraphAttribute(attribute);
 }
 
-void Graph::getEdgelist(Vector* result, bool bycol) const {
+void Graph::getEdgelist(VectorInt* result, bool bycol) const {
     assert(m_pGraph);
     IGRAPH_TRY(igraph_get_edgelist(m_pGraph, result->c_vector(), bycol));
 }
 
-Vector Graph::getEdgelist(bool bycol) const {
-    Vector result;
+VectorInt Graph::getEdgelist(bool bycol) const {
+    VectorInt result;
     getEdgelist(&result, bycol);
     return result;
 }
@@ -121,24 +121,24 @@ bool Graph::hasAttribute(const std::string& attribute) const {
     return getAttributeHolder()->hasGraphAttribute(attribute);
 }
 
-void Graph::incident(Vector* result, long int vertex, NeighborMode mode) const {
+void Graph::incident(VectorInt* result, integer_t vertex, NeighborMode mode) const {
     assert(m_pGraph);
     IGRAPH_TRY(igraph_incident(m_pGraph, result->c_vector(), vertex, mode));
 }
 
-Vector Graph::incident(long int vertex, NeighborMode mode) const {
-    Vector result;
+VectorInt Graph::incident(integer_t vertex, NeighborMode mode) const {
+    VectorInt result;
     incident(&result, vertex, mode);
     return result;
 }
 
-void Graph::neighbors(Vector* result, long int vertex, NeighborMode mode) const {
+void Graph::neighbors(VectorInt* result, integer_t vertex, NeighborMode mode) const {
     assert(m_pGraph);
     IGRAPH_TRY(igraph_neighbors(m_pGraph, result->c_vector(), vertex, mode));
 }
 
-Vector Graph::neighbors(long int vertex, NeighborMode mode) const {
-    Vector result;
+VectorInt Graph::neighbors(integer_t vertex, NeighborMode mode) const {
+    VectorInt result;
     neighbors(&result, vertex, mode);
     return result;
 }

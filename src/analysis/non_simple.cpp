@@ -8,8 +8,8 @@
 
 namespace igraph {
 
-Vector count_multiple(const EdgeSelector& es) {
-    Vector result;
+VectorInt count_multiple(const EdgeSelector& es) {
+    VectorInt result;
     IGRAPH_TRY(igraph_count_multiple(es.getGraph()->c_graph(),
                 result.c_vector(), *es.c_es()));
     return result;

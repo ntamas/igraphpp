@@ -4,6 +4,7 @@
 #define IGRAPHPP_VECTOR_BOOL_H
 
 #include <cstring>
+#include <igraph/igraph_vector.h>
 #include <igraph/cpp/error.h>
 #include <igraph/cpp/types.h>
 
@@ -49,7 +50,7 @@ public:
     explicit VectorBool(size_type length = 0, pointer data = 0)
         : m_pVector(&m_vector), m_owner(true) {
         if (data) {
-            IGRAPH_TRY(igraph_vector_bool_init_copy(m_pVector, data, length));
+            IGRAPH_TRY(igraph_vector_bool_init_array(m_pVector, data, length));
         } else
             IGRAPH_TRY(igraph_vector_bool_init(m_pVector, length));
     }
@@ -64,7 +65,7 @@ public:
 
     /// Copy constructor
     VectorBool(const VectorBool& other) : m_pVector(&m_vector), m_owner(true) {
-        IGRAPH_TRY(igraph_vector_bool_copy(m_pVector, &other.m_vector));
+        IGRAPH_TRY(igraph_vector_bool_init_copy(m_pVector, &other.m_vector));
     }
 
     /// Constructor from STL container
@@ -172,7 +173,7 @@ public:
     }
 
     /// Inserts an element into the vector at a given index
-    void insert(long int index, value_type e) {
+    void insert(integer_t index, value_type e) {
         IGRAPH_TRY(igraph_vector_bool_insert(m_pVector, index, e));
     }
 
@@ -192,12 +193,12 @@ public:
     }
 
     /// Removes an element at the given index from the vector
-    void remove(long int index) {
+    void remove(integer_t index) {
         igraph_vector_bool_remove(m_pVector, index);
     }
 
     /// Removes a section of the vector
-    void remove_section(long int from, long int to) {
+    void remove_section(integer_t from, integer_t to) {
         igraph_vector_bool_remove_section(m_pVector, from, to);
     }
 
@@ -281,12 +282,12 @@ public:
     }
 
     /// Returns the element with the given index
-    reference operator[](long int index) {
+    reference operator[](integer_t index) {
         return VECTOR(*m_pVector)[index];
     }
 
     /// Returns the element with the given index (const variant)
-    value_type operator[](long int index) const {
+    value_type operator[](integer_t index) const {
         return VECTOR(*m_pVector)[index];
     }
 
@@ -303,7 +304,7 @@ public:
     }
 
     /// Vector-vector scalar product
-    long int operator*(const VectorBool& vector) const;
+    integer_t operator*(const VectorBool& vector) const;
 };
 
 }       // end of namespaces

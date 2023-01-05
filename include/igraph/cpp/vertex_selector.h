@@ -38,11 +38,11 @@ public:
     /// Constructs a vertex selector that selects a range of vertices
     VertexSelector(integer_t from, integer_t to, Graph* pGraph = 0) {
         setGraph(pGraph);
-        IGRAPH_TRY(igraph_vs_seq(&m_vs, from, to));
+        IGRAPH_TRY(igraph_vs_range(&m_vs, from, to));
     }
 
     /// Constructs a vertex selector that handles a vector as a vertex selector
-    VertexSelector(Vector* vector, Graph* pGraph = 0) {
+    VertexSelector(VectorInt* vector, Graph* pGraph = 0) {
         setGraph(pGraph);
         IGRAPH_TRY(igraph_vs_vector(&m_vs, vector->c_vector()));
     }

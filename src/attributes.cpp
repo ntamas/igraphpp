@@ -8,6 +8,7 @@
 #include <igraph/cpp/ptr_vector.h>
 #include <igraph/cpp/vector.h>
 #include <igraph/cpp/vector_bool.h>
+#include <igraph/cpp/vector_int.h>
 
 namespace igraph {
 
@@ -41,8 +42,7 @@ AttributeValueVector AttributeHolder::getEdgeAttribute(const std::string& attrib
     return it->second;
 }
 
-AttributeValue AttributeHolder::getEdgeAttribute(const std::string& attribute,
-        long int index) const {
+AttributeValue AttributeHolder::getEdgeAttribute(const std::string& attribute, integer_t index) const {
     EdgeAttributeMap::const_iterator it = m_edgeAttributes.find(attribute);
     if (it == m_edgeAttributes.end())
         return AttributeValue();
@@ -80,7 +80,7 @@ AttributeValueVector AttributeHolder::getVertexAttribute(const std::string& attr
 }
 
 AttributeValue AttributeHolder::getVertexAttribute(const std::string& attribute,
-        long int index) const {
+        integer_t index) const {
     VertexAttributeMap::const_iterator it = m_vertexAttributes.find(attribute);
     if (it == m_vertexAttributes.end())
         return AttributeValue();
@@ -126,7 +126,7 @@ void AttributeHolder::setEdgeAttribute(const std::string& attribute,
 
 class AttributeHandlerImpl {
 public:
-    static int init(igraph_t *graph, igraph_vector_ptr_t *attr) {
+    static igraph_error_t init(igraph_t *graph, igraph_vector_ptr_t *attr) {
         IGRAPHPP_TRY_NEW(graph->attr, AttributeHolder);
         return IGRAPH_SUCCESS;
     }
@@ -137,7 +137,7 @@ public:
         graph->attr = NULL;
     }
 
-    static int copy(igraph_t *to, const igraph_t *from,
+    static igraph_error_t copy(igraph_t *to, const igraph_t *from,
             igraph_bool_t ga, igraph_bool_t va, igraph_bool_t ea) {
         IGRAPHPP_TRY_NEW(to->attr, AttributeHolder);
 
@@ -162,8 +162,10 @@ public:
     static igraph_attribute_type_t infer_type(const AttributeValue& value) {
         const std::type_info& type = value.type();
 
-        if (type == typeid(bool)
-                || type == typeid(short) || type == typeid(unsigned short)
+        if (type == typeid(bool))
+            return IGRAPH_ATTRIBUTE_BOOLEAN;
+    
+        if (type == typeid(short) || type == typeid(unsigned short)
                 || type == typeid(int) || type == typeid(unsigned int)
                 || type == typeid(long) || type == typeid(unsigned long)
                 || type == typeid(long long) || type == typeid(unsigned long long)
@@ -174,7 +176,7 @@ public:
         if (type == typeid(const char*) || type == typeid(std::string))
             return IGRAPH_ATTRIBUTE_STRING;
 
-        return IGRAPH_ATTRIBUTE_DEFAULT;
+        return IGRAPH_ATTRIBUTE_UNSPECIFIED;
     }
 
     /***********************************************************************/
@@ -198,8 +200,6 @@ public:
         HANDLE_TYPE(unsigned int);
         HANDLE_TYPE(long int);
         HANDLE_TYPE(unsigned long int);
-        HANDLE_TYPE(long long int);
-        HANDLE_TYPE(unsigned long long int);
         HANDLE_TYPE(float);
         HANDLE_TYPE(double);
         HANDLE_TYPE(long double);
@@ -235,8 +235,6 @@ public:
         HANDLE_TYPE(unsigned int);
         HANDLE_TYPE(long int);
         HANDLE_TYPE(unsigned long int);
-        HANDLE_TYPE(long long int);
-        HANDLE_TYPE(unsigned long long int);
         HANDLE_TYPE(float);
         HANDLE_TYPE(double);
         HANDLE_TYPE(long double);
@@ -249,8 +247,8 @@ public:
     /***********************************************************************/
 
     template <typename AttrMapType>
-    static int add_vertices_edges_helper(AttrMapType& attrs, long int lastIndex,
-            long int numNewEntries, igraph_vector_ptr_t* attr_vector_ptr) {
+    static igraph_error_t add_vertices_edges_helper(AttrMapType& attrs, integer_t lastIndex,
+            integer_t numNewEntries, igraph_vector_ptr_t* attr_vector_ptr) {
         // Extend the vertex attribute vectors by numNewEntries new elements
         for (AttributeHolder::VertexAttributeMap::iterator it = attrs.begin();
                 it != attrs.end(); it++) {
@@ -262,7 +260,7 @@ public:
             return IGRAPH_SUCCESS;
 
         PtrVector<igraph_attribute_record_t*> attrRecords(attr_vector_ptr);
-        long int i, j;
+        integer_t i, j;
 
         // For each attribute record...
         for (PtrVector<igraph_attribute_record_t*>::iterator it = attrRecords.begin();
@@ -304,7 +302,7 @@ public:
         return IGRAPH_SUCCESS;
     }
 
-    static int add_vertices(igraph_t *graph, long int nv, igraph_vector_ptr_t *attr) {
+    static igraph_error_t add_vertices(igraph_t *graph, integer_t nv, igraph_vector_ptr_t *attr) {
         AttributeHolder& holder = *(static_cast<AttributeHolder*>(graph->attr));
         AttributeHolder::VertexAttributeMap& attrs = holder.m_vertexAttributes;
         return add_vertices_edges_helper(attrs, igraph_vcount(graph)-nv, nv, attr);
@@ -312,20 +310,20 @@ public:
 
     /***********************************************************************/
 
-    static int add_edges(igraph_t *graph, const igraph_vector_t *edges,
+    static igraph_error_t add_edges(igraph_t *graph, const igraph_vector_int_t *edges,
                   igraph_vector_ptr_t *attr) {
         AttributeHolder& holder = *(static_cast<AttributeHolder*>(graph->attr));
         AttributeHolder::EdgeAttributeMap& attrs = holder.m_edgeAttributes;
-        long int ec = igraph_vector_size(edges) / 2;
+        integer_t ec = igraph_vector_int_size(edges) / 2;
         return add_vertices_edges_helper(attrs, igraph_ecount(graph)-ec, ec, attr);
     }
 
     /***********************************************************************/
 
-    static int get_info(const igraph_t *graph,
-            igraph_strvector_t *gnames, igraph_vector_t *gtypes,
-            igraph_strvector_t *vnames, igraph_vector_t *vtypes,
-            igraph_strvector_t *enames, igraph_vector_t *etypes) {
+    static igraph_error_t get_info(const igraph_t *graph,
+            igraph_strvector_t *gnames, igraph_vector_int_t *gtypes,
+            igraph_strvector_t *vnames, igraph_vector_int_t *vtypes,
+            igraph_strvector_t *enames, igraph_vector_int_t *etypes) {
         AttributeHolder& holder = *(static_cast<AttributeHolder*>(graph->attr));
         igraph_attribute_type_t attr_type;
         integer_t vcount = igraph_vcount(graph);
@@ -340,7 +338,7 @@ public:
 
         if (vnames) {
             StrVector vnamesWrapper(vnames);
-            Vector vtypesWrapper(vtypes);
+            VectorInt vtypesWrapper(vtypes);
 
             holder.getVertexAttributeList(vnamesWrapper);
 
@@ -355,7 +353,7 @@ public:
 
         if (enames) {
             StrVector enamesWrapper(enames);
-            Vector etypesWrapper(etypes);
+            VectorInt etypesWrapper(etypes);
 
             holder.getEdgeAttributeList(enamesWrapper);
 
@@ -373,7 +371,7 @@ public:
 
     /***********************************************************************/
 
-    static int get_numeric_graph_attr(const igraph_t *graph, const char *name,
+    static igraph_error_t get_numeric_graph_attr(const igraph_t *graph, const char *name,
             igraph_vector_t *value) {
         AttributeHolder& holder = *(static_cast<AttributeHolder*>(graph->attr));
         AttributeHolder::GraphAttributeMap& attrs = holder.m_graphAttributes;
@@ -391,7 +389,7 @@ public:
 
     /***********************************************************************/
 
-    static int get_numeric_vertex_attr(const igraph_t *graph, const char *name,
+    static igraph_error_t get_numeric_vertex_attr(const igraph_t *graph, const char *name,
             igraph_vs_t vs, igraph_vector_t *value) {
         integer_t vcount = igraph_vcount(graph);
         integer_t i;
@@ -434,7 +432,7 @@ public:
 
     /***********************************************************************/
 
-    static int get_numeric_edge_attr(const igraph_t *graph, const char *name,
+    static igraph_error_t get_numeric_edge_attr(const igraph_t *graph, const char *name,
             igraph_es_t es, igraph_vector_t *value) {
         integer_t ecount = igraph_ecount(graph);
         integer_t i;
@@ -477,7 +475,7 @@ public:
 
     /***********************************************************************/
 
-    static int get_string_graph_attr(const igraph_t *graph, const char *name,
+    static igraph_error_t get_string_graph_attr(const igraph_t *graph, const char *name,
             igraph_strvector_t *value) {
         AttributeHolder& holder = *(static_cast<AttributeHolder*>(graph->attr));
         AttributeHolder::GraphAttributeMap& attrs = holder.m_graphAttributes;
@@ -495,7 +493,7 @@ public:
 
     /***********************************************************************/
 
-    static int get_string_vertex_attr(const igraph_t *graph, const char *name,
+    static igraph_error_t get_string_vertex_attr(const igraph_t *graph, const char *name,
             igraph_vs_t vs, igraph_strvector_t *value) {
         integer_t vcount = igraph_vcount(graph);
         integer_t i;
@@ -538,7 +536,7 @@ public:
 
     /***********************************************************************/
 
-    static int get_string_edge_attr(const igraph_t *graph, const char *name,
+    static igraph_error_t get_string_edge_attr(const igraph_t *graph, const char *name,
             igraph_es_t es, igraph_strvector_t *value) {
         integer_t ecount = igraph_ecount(graph);
         integer_t i;
@@ -581,7 +579,7 @@ public:
 
     /***********************************************************************/
 
-    static int get_bool_graph_attr(const igraph_t *graph, const char *name,
+    static igraph_error_t get_bool_graph_attr(const igraph_t *graph, const char *name,
             igraph_vector_bool_t *value) {
         AttributeHolder& holder = *(static_cast<AttributeHolder*>(graph->attr));
         AttributeHolder::GraphAttributeMap& attrs = holder.m_graphAttributes;
@@ -599,7 +597,7 @@ public:
 
     /***********************************************************************/
 
-    static int get_bool_vertex_attr(const igraph_t *graph, const char *name,
+    static igraph_error_t get_bool_vertex_attr(const igraph_t *graph, const char *name,
             igraph_vs_t vs, igraph_vector_bool_t *value) {
         integer_t vcount = igraph_vcount(graph);
         integer_t i;
@@ -642,7 +640,7 @@ public:
 
     /***********************************************************************/
 
-    static int get_bool_edge_attr(const igraph_t *graph, const char *name,
+    static igraph_error_t get_bool_edge_attr(const igraph_t *graph, const char *name,
             igraph_es_t es, igraph_vector_bool_t *value) {
         integer_t ecount = igraph_ecount(graph);
         integer_t i;
@@ -686,9 +684,9 @@ public:
     /***********************************************************************/
 
     template <typename It>
-    static int gettype_helper(const igraph_t *graph, igraph_attribute_type_t *type,
+    static igraph_error_t gettype_helper(const igraph_t *graph, igraph_attribute_type_t *type,
             const It& begin, const It& end) {
-        igraph_attribute_type_t result = IGRAPH_ATTRIBUTE_DEFAULT;
+        igraph_attribute_type_t result = IGRAPH_ATTRIBUTE_UNSPECIFIED;
 
         /* Infer the attribute type by evaluating the types of the items */
         for (It it = begin; it != end; ++it) {
@@ -697,7 +695,7 @@ public:
 
             igraph_attribute_type_t current_type = infer_type(*it);
 
-            if (result == IGRAPH_ATTRIBUTE_DEFAULT)
+            if (result == IGRAPH_ATTRIBUTE_UNSPECIFIED)
                 result = current_type;
             else if (result != current_type) {
                 // Mixed attributes are treated as strings
@@ -711,14 +709,14 @@ public:
     }
 
     template <typename T>
-    static int gettype_helper(const igraph_t *graph, igraph_attribute_type_t *type,
+    static igraph_error_t gettype_helper(const igraph_t *graph, igraph_attribute_type_t *type,
             const typename T::const_iterator& it) {
         const typename T::mapped_type& values = it->second;
         return gettype_helper(graph, type, values.begin(), values.end());
     }
 
     template <typename T>
-    static int gettype_helper(const igraph_t *graph, igraph_attribute_type_t *type,
+    static igraph_error_t gettype_helper(const igraph_t *graph, igraph_attribute_type_t *type,
             const char* name, const T& map) {
         typename T::const_iterator it = map.find(name);
         if (it == map.end())
@@ -727,7 +725,7 @@ public:
         return gettype_helper<T>(graph, type, it);
     }
 
-    static int gettype(const igraph_t *graph, igraph_attribute_type_t *type,
+    static igraph_error_t gettype(const igraph_t *graph, igraph_attribute_type_t *type,
             igraph_attribute_elemtype_t elemtype, const char *name) {
         AttributeHolder& holder = *(static_cast<AttributeHolder*>(graph->attr));
         switch (elemtype) {
@@ -801,7 +799,7 @@ static igraph_attribute_table_t cpp_attribute_handler = {
 };
 
 void AttributeHandler::attach() {
-    igraph_i_set_attribute_table(&cpp_attribute_handler);
+    igraph_set_attribute_table(&cpp_attribute_handler);
 }
 
 }            // end of namespace

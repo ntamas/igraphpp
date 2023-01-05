@@ -4,6 +4,7 @@
 #define IGRAPHPP_VECTOR_H
 
 #include <cstring>
+#include <igraph/igraph_vector.h>
 #include <igraph/cpp/error.h>
 #include <igraph/cpp/types.h>
 
@@ -51,7 +52,7 @@ public:
     explicit Vector(size_type length = 0, pointer data = 0)
         : m_pVector(&m_vector), m_owner(true) {
         if (data) {
-            IGRAPH_TRY(igraph_vector_init_copy(m_pVector, data, length));
+            IGRAPH_TRY(igraph_vector_init_array(m_pVector, data, length));
         } else {
             IGRAPH_TRY(igraph_vector_init(m_pVector, length));
         }
@@ -67,7 +68,7 @@ public:
 
     /// Copy constructor
     Vector(const Vector& other) : m_pVector(&m_vector), m_owner(true) {
-        IGRAPH_TRY(igraph_vector_copy(m_pVector, other.m_pVector));
+        IGRAPH_TRY(igraph_vector_init_copy(m_pVector, other.m_pVector));
     }
 
     /// Constructor from STL container
@@ -91,10 +92,10 @@ public:
     /* Static methods */
     /******************/
 
-    /// Constructs a vector containing a sequence
-    static Vector Seq(value_type from, value_type to) {
+    /// Constructs a vector containing a range
+    static Vector Range(value_type from, value_type to) {
         igraph_vector_t vec;
-        IGRAPH_TRY(igraph_vector_init_seq(&vec, from, to));
+        IGRAPH_TRY(igraph_vector_init_range(&vec, from, to));
         return Vector(vec);
     }
 
@@ -134,7 +135,7 @@ public:
      * where the element was found, or where it should be inserted
      * if the element was not found to keep the vector sorted.
      */
-    bool binsearch(value_type what, long int *pos = 0) const {
+    bool binsearch(value_type what, integer_t *pos = 0) const {
         return igraph_vector_binsearch(m_pVector, what, pos);
     }
 
@@ -194,7 +195,7 @@ public:
     }
 
     /// Inserts an element into the vector at a given index
-    void insert(long int index, value_type e) {
+    void insert(integer_t index, value_type e) {
         IGRAPH_TRY(igraph_vector_insert(m_pVector, index, e));
     }
 
@@ -229,22 +230,22 @@ public:
     }
 
     /// Removes an element at the given index from the vector
-    void remove(long int index) {
+    void remove(integer_t index) {
         igraph_vector_remove(m_pVector, index);
     }
 
     /// Removes a section of the vector
-    void remove_section(long int from, long int to) {
+    void remove_section(integer_t from, integer_t to) {
         igraph_vector_remove_section(m_pVector, from, to);
     }
 
     /// Reserves space for the given number of elements in the vector
-    void reserve(long int newsize) {
+    void reserve(integer_t newsize) {
         IGRAPH_TRY(igraph_vector_reserve(m_pVector, newsize));
     }
 
     /// Resizes the vector
-    void resize(long int newsize) {
+    void resize(integer_t newsize) {
         IGRAPH_TRY(igraph_vector_resize(m_pVector, newsize));
     }
 
@@ -254,7 +255,7 @@ public:
     }
 
     /// Searches the vector for a given element from the given position
-    bool search(long int from, value_type what, long int* pos = 0) const {
+    bool search(integer_t from, value_type what, integer_t* pos = 0) const {
         return igraph_vector_search(m_pVector, from, what, pos);
     }
 
@@ -328,12 +329,12 @@ public:
     }
 
     /// Returns the element with the given index
-    reference operator[](long int index) {
+    reference operator[](integer_t index) {
         return VECTOR(*m_pVector)[index];
     }
 
     /// Returns the element with the given index (const variant)
-    value_type operator[](long int index) const {
+    value_type operator[](integer_t index) const {
         return VECTOR(*m_pVector)[index];
     }
 

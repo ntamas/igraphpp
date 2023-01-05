@@ -6,14 +6,14 @@
 
 namespace igraph {
 
-std::auto_ptr<Graph> degree_sequence_game(const Vector& degrees, DegreeSequenceMethod method) {
+std::auto_ptr<Graph> degree_sequence_game(const VectorInt& degrees, DegreeSequenceMethod method) {
     std::auto_ptr<igraph_t> result(new igraph_t);
     IGRAPH_TRY(igraph_degree_sequence_game(result.get(), degrees.c_vector(),
                 0, method));
     return std::auto_ptr<Graph>(new Graph(result));
 }
 
-std::auto_ptr<Graph> degree_sequence_game(const Vector& outdegrees, const Vector& indegrees,
+std::auto_ptr<Graph> degree_sequence_game(const VectorInt& outdegrees, const VectorInt& indegrees,
         DegreeSequenceMethod method) {
     std::auto_ptr<igraph_t> result(new igraph_t);
     IGRAPH_TRY(igraph_degree_sequence_game(result.get(), outdegrees.c_vector(),

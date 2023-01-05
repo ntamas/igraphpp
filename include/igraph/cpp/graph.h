@@ -16,6 +16,7 @@
 #include <igraph/cpp/error.h>
 #include <igraph/cpp/types.h>
 #include <igraph/cpp/vector.h>
+#include <igraph/cpp/vector_int.h>
 
 namespace igraph {
 
@@ -36,7 +37,7 @@ public:
     /*****************************/
 
     /// Constructs an empty graph
-    Graph(long numVertices = 0, bool directed = false) : m_pGraph(new igraph_t) {
+    Graph(integer_t numVertices = 0, bool directed = false) : m_pGraph(new igraph_t) {
         IGRAPH_TRY(igraph_empty(m_pGraph, numVertices, directed));
     }
     
@@ -83,16 +84,16 @@ public:
     void addEdge(integer_t source, integer_t target);
 
     /// Adds a list of edges to the graph
-    void addEdges(const Vector& edges);
+    void addEdges(const VectorInt& edges);
 
     /// Adds a single vertex to the graph
     void addVertex();
 
     /// Adds the given number of vertices to the graph
-    void addVertices(long numVertices);
+    void addVertices(integer_t numVertices);
 
     /// Returns whether the two vertices are connected
-    bool areConnected(long u, long v) const;
+    bool areConnected(integer_t u, integer_t v) const;
 
     /// Extracts a pointer to the encapsulated graph object
     igraph_t* c_graph() { return m_pGraph; }
@@ -101,10 +102,10 @@ public:
     const igraph_t* c_graph() const { return m_pGraph; }
 
     /// Returns the degrees of some vertices
-    Vector degree(const VertexSelector& vids,
+    VectorInt degree(const VertexSelector& vids,
             NeighborMode mode = IGRAPH_ALL, bool loops = false) const;
     /// Returns the degrees of some vertices
-    void degree(Vector* result, const VertexSelector& vids,
+    void degree(VectorInt* result, const VertexSelector& vids,
             NeighborMode mode = IGRAPH_ALL, bool loops = false) const;
 
     /// Deletes some edges from the graph
@@ -123,9 +124,9 @@ public:
     AttributeValue getAttribute(const std::string& attribute) const;
 
     /// Returns the edge list of the graph
-    Vector getEdgelist(bool bycol=false) const;
+    VectorInt getEdgelist(bool bycol=false) const;
     /// Returns the edge list of the graph
-    void getEdgelist(Vector* result, bool bycol=false) const;
+    void getEdgelist(VectorInt* result, bool bycol=false) const;
 
     /// Returns the ID of an arbitrary edge between the two given nodes
     integer_t getEid(integer_t source, integer_t target, bool directed=true,
@@ -135,9 +136,9 @@ public:
     bool hasAttribute(const std::string& attribute) const;
 
     /// Returns the edges incident on a given vertex
-    void incident(Vector* result, long int vertex, NeighborMode mode = IGRAPH_OUT) const;
+    void incident(VectorInt* result, integer_t vertex, NeighborMode mode = IGRAPH_OUT) const;
     /// Returns the edges incident on a given vertex
-    Vector incident(long int vertex, NeighborMode mode = IGRAPH_OUT) const;
+    VectorInt incident(integer_t vertex, NeighborMode mode = IGRAPH_OUT) const;
 
     /// Returns whether the graph is directed
     bool isDirected() const;
@@ -146,9 +147,9 @@ public:
     bool isSimple() const;
 
     /// Returns the neighbors of a vertex
-    void neighbors(Vector* result, long int vertex, NeighborMode mode = IGRAPH_OUT) const;
+    void neighbors(VectorInt* result, integer_t vertex, NeighborMode mode = IGRAPH_OUT) const;
     /// Returns the neighbors of a vertex
-    Vector neighbors(long int vertex, NeighborMode mode = IGRAPH_OUT) const;
+    VectorInt neighbors(integer_t vertex, NeighborMode mode = IGRAPH_OUT) const;
 
     /// Sets the value of the given graph attribute
     void setAttribute(const std::string& attribute, const AttributeValue& value);

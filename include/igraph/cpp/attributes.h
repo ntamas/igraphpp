@@ -55,8 +55,7 @@ public:
     AttributeValueVector getEdgeAttribute(const std::string& attribute) const;
 
     /// Returns the value of the given edge attribute for a given edge index
-    AttributeValue getEdgeAttribute(const std::string& attribute,
-        long int index) const;
+    AttributeValue getEdgeAttribute(const std::string& attribute, integer_t index) const;
 
     /// Stores the list of edge attributes in an StrVector
     void getEdgeAttributeList(StrVector& container) const;
@@ -86,8 +85,7 @@ public:
     AttributeValueVector getVertexAttribute(const std::string& attribute) const;
 
     /// Returns the value of the given vertex attribute for a given vertex index
-    AttributeValue getVertexAttribute(const std::string& attribute,
-        long int index) const;
+    AttributeValue getVertexAttribute(const std::string& attribute, integer_t index) const;
 
     /// Stores the list of vertex attributes in an StrVector
     void getVertexAttributeList(StrVector& container) const;

@@ -11,8 +11,8 @@ namespace igraph {
 class Graph;
 
 /// Finds the (weakly or strongly) connected components of a graph
-void clusters(const Graph& graph, Vector* membership,
-        Vector* csize = 0, integer_t* no = 0,
+void connected_components(const Graph& graph, VectorInt* membership,
+        VectorInt* csize = 0, integer_t* no = 0,
         Connectedness connectedness = IGRAPH_WEAK);
 
 }         // end of namespace

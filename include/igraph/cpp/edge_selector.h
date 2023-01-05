@@ -36,7 +36,7 @@ public:
     }
 
     /// Constructs an edge selector that handles a vector as an edge selector
-    EdgeSelector(Vector* vector, Graph* pGraph = 0) {
+    EdgeSelector(VectorInt* vector, Graph* pGraph = 0) {
         setGraph(pGraph);
         IGRAPH_TRY(igraph_es_vector(&m_es, vector->c_vector()));
     }
@@ -74,7 +74,7 @@ public:
     }
 
     /// Creates an edge selector from multiple edges defined by their endpoints
-    static EdgeSelector Pairs(Vector& vector, bool directed=true, Graph* pGraph = 0) {
+    static EdgeSelector Pairs(VectorInt& vector, bool directed = true, Graph* pGraph = 0) {
         igraph_es_t es;
         IGRAPH_TRY(igraph_es_pairs(&es, vector.c_vector(), directed));
         return EdgeSelector(es, pGraph);

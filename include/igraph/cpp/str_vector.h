@@ -47,7 +47,7 @@ public:
     /*****************************/
 
     /// Constructs a string vector
-    explicit StrVector(long int length = 0) : m_pStrVector(&m_strvector), m_owner(true) {
+    explicit StrVector(integer_t length = 0) : m_pStrVector(&m_strvector), m_owner(true) {
         IGRAPH_TRY(igraph_strvector_init(m_pStrVector, length));
     }
 
@@ -63,7 +63,7 @@ public:
 
     /// Copy constructor
     StrVector(const StrVector& other) : m_pStrVector(&m_strvector), m_owner(true) {
-        IGRAPH_TRY(igraph_strvector_copy(m_pStrVector, other.m_pStrVector));
+        IGRAPH_TRY(igraph_strvector_init_copy(m_pStrVector, other.m_pStrVector));
     }
 
     /// Destroys the vector
@@ -78,12 +78,12 @@ public:
 
     /// Adds a new element to the end of the vector
     void add(const char* value) {
-        IGRAPH_TRY(igraph_strvector_add(m_pStrVector, value));
+        push_back(value);
     }
 
     /// Adds a new element to the end of the vector
     void add(const std::string& value) {
-        add(value.c_str());
+        push_back(value);
     }
 
     /// Appends another string vector to this one
@@ -93,22 +93,22 @@ public:
 
     /// Returns a reference to the last element of the vector
     reference back() {
-        return m_pStrVector->data[size()-1];
+        return m_pStrVector->stor_begin[size()-1];
     }
 
     /// Returns a const reference to the last element of the vector
     const_reference back() const {
-        return m_pStrVector->data[size()-1];
+        return m_pStrVector->stor_begin[size()-1];
     }
 
     /// Returns an iterator pointing to the first element of the vector
     iterator begin() {
-        return m_pStrVector->data;
+        return m_pStrVector->stor_begin;
     }
 
     /// Returns an iterator pointing to the first element of the vector (const)
     const_iterator begin() const {
-        return m_pStrVector->data;
+        return m_pStrVector->stor_begin;
     }
 
     /// Removes all the elements from the string vector
@@ -138,36 +138,27 @@ public:
 
     /// Returns an iterator pointing after the last element of the vector
     iterator end() {
-        return m_pStrVector->data + size();
+        return m_pStrVector->stor_begin + size();
     }
 
     /// Returns an iterator pointing after the last element of the vector (const)
     const_iterator end() const {
-        return m_pStrVector->data + size();
+        return m_pStrVector->stor_begin + size();
     }
 
     /// Returns a reference to the first element of the vector
     reference front() {
-        return m_pStrVector->data[0];
+        return m_pStrVector->stor_begin[0];
     }
 
     /// Returns a const reference to the first element of the vector
     const_reference front() const {
-        return m_pStrVector->data[0];
+        return m_pStrVector->stor_begin[0];
     }
 
     /// Returns an element of the vector
-    char* get(long int idx) {
-        char* result;
-        igraph_strvector_get(m_pStrVector, idx, &result);
-        return result;
-    }
-
-    /// Returns an element of the vector (const)
-    const char* get(long int idx) const {
-        char* result;
-        igraph_strvector_get(m_pStrVector, idx, &result);
-        return result;
+    const char* get(integer_t idx) const {
+        return igraph_strvector_get(m_pStrVector, idx);
     }
 
     /// Prints the vector to the standard output
@@ -183,31 +174,31 @@ public:
 
     /// Adds a new string to the vector by copying it
     void push_back(const char* string) {
-        add(string);
+        IGRAPH_TRY(igraph_strvector_push_back(m_pStrVector, string));
     }
 
     /// Adds a new string to the vector by copying it
     void push_back(const std::string& string) {
-        add(string);
+        push_back(string.c_str());
     }
 
     /// Removes the given element from the vector
-    void remove(long int elem) {
+    void remove(integer_t elem) {
         igraph_strvector_remove(m_pStrVector, elem);
     }
 
     /// Resizes the vector
-    void resize(long int newsize) {
+    void resize(integer_t newsize) {
         IGRAPH_TRY(igraph_strvector_resize(m_pStrVector, newsize));
     }
 
     /// Sets an element of the vector
-    void set(long int idx, const char* value) {
+    void set(integer_t idx, const char* value) {
         IGRAPH_TRY(igraph_strvector_set(m_pStrVector, idx, value));
     }
 
     /// Sets an element of the vector
-    void set(long int idx, const std::string& value) {
+    void set(integer_t idx, const std::string& value) {
         set(idx, value.c_str());
     }
 
@@ -224,7 +215,7 @@ public:
     StrVector& operator=(const StrVector& other);
 
     /// Returns the element with the given index
-    value_type operator[](long int index) {
+    value_type operator[](integer_t index) {
         return STR(*m_pStrVector, index);
     }
 };

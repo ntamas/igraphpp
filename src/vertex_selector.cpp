@@ -16,7 +16,7 @@ AttributeValueVector VertexSelector::getAttribute(const std::string& attribute) 
     IGRAPH_TRY(igraph_vit_create(m_pGraph->c_graph(), m_vs, &vit));
     while (!IGRAPH_VIT_END(vit)) {
         // TODO: vectorize this!
-        result.push_back(attributeHolder.getVertexAttribute(attribute, (long int)IGRAPH_VIT_GET(vit)));
+        result.push_back(attributeHolder.getVertexAttribute(attribute, IGRAPH_VIT_GET(vit)));
         IGRAPH_VIT_NEXT(vit);
     }
     igraph_vit_destroy(&vit);
@@ -43,7 +43,7 @@ void VertexSelector::setAttribute(const std::string& attribute,
     IGRAPH_TRY(igraph_vit_create(m_pGraph->c_graph(), m_vs, &vit));
     while (!IGRAPH_VIT_END(vit)) {
         assert(it != endIt);
-        allAttrs[(long int)IGRAPH_VIT_NEXT(vit)] = *it;
+        allAttrs[IGRAPH_VIT_NEXT(vit)] = *it;
         it++;
         IGRAPH_VIT_NEXT(vit);
     }

@@ -3,13 +3,13 @@
 #include <igraph/cpp/graph.h>
 #include <igraph/cpp/vector.h>
 #include <igraph/cpp/vector_bool.h>
-#include <igraph/cpp/vector_long.h>
+#include <igraph/cpp/vector_int.h>
 #include <igraph/igraph_matching.h>
 
 namespace igraph {
 
 void maximum_bipartite_matching(const Graph& graph, const VectorBool& types,
-        integer_t* matching_size, real_t* matching_weight, VectorLong* matching,
+        integer_t* matching_size, real_t* matching_weight, VectorInt* matching,
         const Vector* weights, real_t eps) {
     IGRAPH_TRY(igraph_maximum_bipartite_matching(graph.c_graph(), types.c_vector(),
                 matching_size, matching_weight,
