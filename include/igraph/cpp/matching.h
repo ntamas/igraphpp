@@ -8,10 +8,10 @@ namespace igraph {
 class Graph;
 class Vector;
 class VectorBool;
-class VectorLong;
+class VectorInt;
 
 void maximum_bipartite_matching(const Graph& graph, const VectorBool& types,
-        integer_t* matching_size, real_t* matching_weight, VectorLong* matching,
+        integer_t* matching_size, real_t* matching_weight, VectorInt* matching,
         const Vector* weights, real_t eps);
 
 }         // end of namespace
