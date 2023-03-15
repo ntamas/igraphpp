@@ -32,7 +32,7 @@ public:
 
     /// Copy constructor
     Matrix(const Matrix& other) {
-        IGRAPH_TRY(igraph_matrix_copy(&m_matrix, &other.m_matrix));
+        IGRAPH_TRY(igraph_matrix_init_copy(&m_matrix, &other.m_matrix));
     }
 
     /// Destroys the matrix
