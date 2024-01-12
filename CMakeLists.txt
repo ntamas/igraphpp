@@ -1,5 +1,4 @@
-cmake_minimum_required(VERSION 2.8.12)
-cmake_policy(SET CMP0003 NEW)
+cmake_minimum_required(VERSION 3.5)
 
 #####################################################################
 # General project properties
@@ -23,7 +22,6 @@ project(igraphpp C CXX)
 # Find dependencies
 #####################################################################
 
-set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/etc/cmake;${CMAKE_MODULE_PATH})
 find_package(igraph REQUIRED)
 
 #####################################################################
@@ -38,10 +36,6 @@ set(CMAKE_C_FLAGS_RELEASE   "${CMAKE_ARCH_FLAGS} -O3 -DNDEBUG -Wall -s")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_ARCH_FLAGS} -O3 -DNDEBUG -Wall -s")
 set(CMAKE_C_FLAGS_PROFILING "${CMAKE_ARCH_FLAGS} -pg")
 set(CMAKE_CXX_FLAGS_PROFILING "${CMAKE_ARCH_FLAGS} -pg")
-
-include_directories(${igraph_INCLUDE_DIRS}
-                    ${CMAKE_CURRENT_SOURCE_DIR}/include
-                    ${CMAKE_CURRENT_BINARY_DIR}/include)
 
 #####################################################################
 # Process subdirectories
