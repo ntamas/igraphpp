@@ -216,7 +216,7 @@ public:
 
     /// Returns the element with the given index
     value_type operator[](integer_t index) {
-        return STR(*m_pStrVector, index);
+        return igraph_strvector_get(m_pStrVector, index);
     }
 };
 
