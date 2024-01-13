@@ -6,16 +6,16 @@
 
 namespace igraph {
 
-std::auto_ptr<Graph> erdos_renyi_game_gnm(integer_t n, integer_t m, bool directed, bool loops) {
-    std::auto_ptr<igraph_t> result(new igraph_t);
+std::unique_ptr<Graph> erdos_renyi_game_gnm(integer_t n, integer_t m, bool directed, bool loops) {
+    std::unique_ptr<igraph_t> result(new igraph_t);
     IGRAPH_TRY(igraph_erdos_renyi_game_gnm(result.get(), n, m, directed, loops));
-    return std::auto_ptr<Graph>(new Graph(result));
+    return std::unique_ptr<Graph>(new Graph(std::move(result)));
 }
 
-std::auto_ptr<Graph> erdos_renyi_game_gnp(integer_t n, real_t p, bool directed, bool loops) {
-    std::auto_ptr<igraph_t> result(new igraph_t);
+std::unique_ptr<Graph> erdos_renyi_game_gnp(integer_t n, real_t p, bool directed, bool loops) {
+    std::unique_ptr<igraph_t> result(new igraph_t);
     IGRAPH_TRY(igraph_erdos_renyi_game_gnp(result.get(), n, p, directed, loops));
-    return std::auto_ptr<Graph>(new Graph(result));
+    return std::unique_ptr<Graph>(new Graph(std::move(result)));
 }
 
 }         // end of namespaces

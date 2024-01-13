@@ -7,7 +7,7 @@
 namespace igraph {
 
 Graph read_edgelist(FILE* instream, integer_t n, bool directed) {
-    std::auto_ptr<igraph_t> result(new igraph_t);
+    std::unique_ptr<igraph_t> result(new igraph_t);
     IGRAPH_TRY(igraph_read_graph_edgelist(result.get(), instream, n, directed));
     return Graph(result.release());
 }

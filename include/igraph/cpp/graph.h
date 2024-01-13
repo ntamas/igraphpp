@@ -61,7 +61,7 @@ public:
      *
      * This function never throws an exception.
      */
-    Graph(std::auto_ptr<igraph_t> graph) throw() : m_pGraph(graph.release()) {
+    Graph(std::unique_ptr<igraph_t> graph) throw() : m_pGraph(graph.release()) {
     }
 
     /// Copy constructor
